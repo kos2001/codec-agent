@@ -26,6 +26,15 @@ generated/g711/tb/           tb_g711.sv + run_all.sh (iverilog, 4-state)
 generated/g711/formal/       g711_props.sv + g711.sby (SymbiYosys, z3)
 pipeline/gate.py             the gate: lint → synthesize → simulate → formal (+ equiv, info)
 pipeline/mutate.py           mutation campaign through the gate
+pipeline/generate.py         Hermes generation loop: prompt → gate → evidence → repair (PROVEN/EXHAUSTED/ERRORED)
+pipeline/hermes_client.py    stdlib client for the codecagent Hermes API server (.env: HERMES_*)
+pipeline/generate_tb.py      Hermes writes a self-checking testbench; judged for soundness (PASS on PROVEN RTL)
+                             and sensitivity (mutant kill rate): ACCEPTED/WEAK/EXHAUSTED/ERRORED
+pipeline/waves.py            trace any testbench run into build/waves/*.vcd (window by clock edges) + VCD→JSON
+api/server.py                FastAPI workbench backend (strips /api, serves frontend/dist)
+frontend/                    React 19 + Vite workbench, adapted from hls-rtl's EDA-style UI
+scripts/hermes_server.sh     start|stop|status the Hermes API server (profile codecagent, :8659)
+scripts/workbench.sh         build + serve the workbench on :8013 (--dev: Vite on :5175)
 specs/g711/                  G.711 (11/88) PDF + extracted text (tables are images, see rules)
 tests/                       L0 pytest: oracle vs STL, oracle vs PDF tables
 runs/                        archived gate / mutation JSON
@@ -45,7 +54,27 @@ python3 pipeline/gate.py               # gate the committed RTL (~5s)
 python3 pipeline/gate.py --rtl-dir <candidate_dir> --no-stop
 python3 pipeline/mutate.py --preview   # mutant set without running
 python3 pipeline/mutate.py -j 8        # full campaign (~3 min)
+
+scripts/hermes_server.sh start          # Hermes API server, profile codecagent, 127.0.0.1:8659
+python3 pipeline/generate.py --health  # authenticated check: key works, model listed
+python3 pipeline/generate.py --module g711_ulaw_enc --max-iters 3
+python3 pipeline/generate_tb.py --module g711_ulaw_enc          # or --check <tb.sv> (no LLM)
+python3 pipeline/waves.py --test L1_ulaw_enc [--rtl-dir <cand>] # or --tb <tb.sv> --module <m>
+scripts/workbench.sh                   # http://127.0.0.1:8013
 ```
+
+## Hermes API server (generation backend)
+
+- Profile `~/.hermes/profiles/codecagent` (cloned from `rtlgateway`), `platforms.api_server` only,
+  port 8659, model name `codec-agent`, `platform_toolsets.api_server: []` (generation is one turn;
+  tools cost ~9.6k prompt tokens per call). Role prompt: the profile's `SOUL.md`.
+- Upstream LLM = `model.default` in that config.yaml (currently OpenRouter
+  `deepseek/deepseek-v4.1-flash`). Change it there and restart; `generate.py` records it per run.
+- Key: the profile `.env` `API_SERVER_KEY` (overrides config.yaml token) = repo `.env`
+  `HERMES_API_KEY`. Both git-ignored; never print or commit them.
+- Restarting with `--replace` drains in-flight work: requests get 503 `gateway_draining` until the
+  old process exits. Upstream failures come back as HTTP 200 with `finish_reason: error` —
+  `hermes_client` raises on those (seen: openai-codex 429 quota).
 
 ## Rules learned the hard way (each one bit during Phase 0)
 
@@ -77,6 +106,24 @@ python3 pipeline/mutate.py -j 8        # full campaign (~3 min)
 - G.711 §3.6 leaves inputs exactly on a decision value to the implementation. REQ-A-02/U-02 are
   a DESIGN choice (STL convention), not spec text — do not "fix" them toward the PDF.
 - STL's CTest assumes an in-source working dir; run `g711demo` directly (see crosscheck.py).
+- **State the gate's lint contract in the generation prompt.** The first deepseek run produced
+  candidates that passed all 16 simulation tests and all 8 formal tasks on iteration 1 and were
+  still rejected — by `verilator -Wall` width/unused warnings the prompt never mentioned.
+- **A PROVEN verdict is only as strong as the gate that issued it.** Hermes produced μ-law
+  candidates with `always_ff @(posedge clk or negedge rst_n)` that passed lint, 4-state sim and
+  unbounded formal — all sample reset at clock edges. REQ-IF-04 (synchronous reset) is now a
+  netlist check in `synthesize` (no `$adff`/`$aldff`/`$dffsr` after `proc`), with a `reset-style`
+  mutation operator proving it. Archived runs from the weaker gate carry a `regate` field.
+- **A tool error is not a verdict.** `equiv` reported "differs" when yosys simply could not model
+  an async FF. It now distinguishes `proof did fail` (differs) from other errors (skip).
+- **Compare data only where it is defined.** `equiv` masks output data with `out_valid`; a design
+  that differs only in don't-care data (e.g. data register not updated during reset) is equivalent.
+- **Waveform windows are counted in clock edges, not time.** Generated testbenches often omit
+  `timescale; a 10 ns assumption produced an empty trace. `wave_dump` is a separate root
+  (`iverilog -s <tb> -s wave_dump`) so no testbench is ever edited to get a waveform.
+- **Parse the field you mean.** `t=(\d+)` matched the `t=` inside `got=0001`; anchor trailing fields.
+- **The generation prompt must never contain the committed implementation** (only requirements,
+  port contract, conventions); `tests/test_generate.py` enforces it, or PROVEN means copying.
 
 ## Conventions
 
