@@ -1,0 +1,76 @@
+{
+  "run_id": "20260917-233017-g711_alaw_dec",
+  "module": "g711_alaw_dec",
+  "outcome": "PROVEN",
+  "iterations": 2,
+  "max_iters": 3,
+  "model": "deepseek/deepseek-v4.1-flash",
+  "server_model": "codec-agent",
+  "server": "http://127.0.0.1:8659",
+  "proven_candidate": "build/generate/20260917-233017-g711_alaw_dec/iter2/g711_alaw_dec.sv",
+  "equivalent_to_baseline": false,
+  "attempts": [
+    {
+      "iteration": 1,
+      "usage": {
+        "prompt_tokens": 7125,
+        "completion_tokens": 3964,
+        "total_tokens": 11089
+      },
+      "llm_elapsed_s": 26.5,
+      "candidate": "build/generate/20260917-233017-g711_alaw_dec/iter1/g711_alaw_dec.sv",
+      "verdict": "REJECTED",
+      "stages": {
+        "lint": "fail",
+        "synthesize": "pass",
+        "simulate": "pass",
+        "formal": "pass",
+        "equiv": "fail"
+      },
+      "details": {
+        "lint": "g711_alaw_dec: %Warning-WIDTHEXPAND: /Users/kos2001/gitspace/codec-agent/build/generate/20260917-233017-g711_alaw_dec/iter1/g711_alaw_dec.sv:25:10: Operator ASSIGN expects 4 bits on the Assign RHS, but Assign RHS's SEL generates 3 bits.",
+        "synthesize": "alaw_enc=93 alaw_dec=92 ulaw_enc=140 ulaw_dec=84 cells",
+        "simulate": "16/16 tests pass",
+        "formal": "8/8 tasks (prove: unbounded, cover: reached)",
+        "equiv": "differs from baseline: g711_alaw_dec"
+      },
+      "equivalent_to_baseline": false,
+      "gate_elapsed_s": 5.0,
+      "evidence": "lint: FAILED — g711_alaw_dec: %Warning-WIDTHEXPAND: /Users/kos2001/gitspace/codec-agent/build/generate/20260917-233017-g711_alaw_dec/iter1/g711_alaw_dec.sv:25:10: Operator ASSIGN expects 4 bits on the Assign RHS, but Assign RHS's SEL generates 3 bits.\nequiv: FAILED — differs from baseline: g711_alaw_dec\n%Warning-WIDTHEXPAND: /Users/kos2001/gitspace/codec-agent/build/generate/20260917-233017-g711_alaw_dec/iter1/g711_alaw_dec.sv:25:10: Operator ASSIGN expects 4 bits on the Assign RHS, but Assign RHS's SEL generates 3 bits.\n%Warning-WIDTHEXPAND: /Users/kos2001/gitspace/codec-agent/build/generate/20260917-233017-g711_alaw_dec/iter1/g711_alaw_dec.sv:33:36: Operator OR expects 16 bits on the RHS, but RHS's CONST '13'h1' generates 13 bits.\n%Warning-WIDTHTRUNC: /Users/kos2001/gitspace/codec-agent/build/generate/20260917-233017-g711_alaw_dec/iter1/g711_alaw_dec.sv:33:13: Operator ASSIGN expects 13 bits on the Assign RHS, but Assign RHS's OR generates 16 bits.\n%Error: Exiting due to 3 warning(s)"
+    },
+    {
+      "iteration": 2,
+      "usage": {
+        "prompt_tokens": 8157,
+        "completion_tokens": 3568,
+        "total_tokens": 11725
+      },
+      "llm_elapsed_s": 28.2,
+      "candidate": "build/generate/20260917-233017-g711_alaw_dec/iter2/g711_alaw_dec.sv",
+      "verdict": "PROVEN",
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "pass",
+        "formal": "pass",
+        "equiv": "fail"
+      },
+      "details": {
+        "lint": "4 modules clean",
+        "synthesize": "alaw_enc=93 alaw_dec=92 ulaw_enc=140 ulaw_dec=84 cells",
+        "simulate": "16/16 tests pass",
+        "formal": "8/8 tasks (prove: unbounded, cover: reached)",
+        "equiv": "differs from baseline: g711_alaw_dec"
+      },
+      "equivalent_to_baseline": false,
+      "gate_elapsed_s": 4.7
+    }
+  ],
+  "proves": "For every module: (simulate) output is byte-identical to the ITU-T G.191 STL reference on its official sweep vectors (all 65536 16-bit inputs), to STL on all 256 decoder codes, and to the spec-table model on segment-edge vectors, under random stalls in a 4-state simulator; full-rate throughput is 1 sample/cycle; (formal, unbounded k-induction) on EVERY reachable trace: no sample lost, duplicated or invented, no false backpressure, output stable under stall, reset empties the stage, and every delivered value equals a reference model written from the G.711 table formulas.",
+  "note": "Candidates are not applied. Review and copy into generated/g711/rtl by hand.",
+  "equiv_recheck": {
+    "status": "pass",
+    "detail": "equivalent to baseline on valid outputs (alaw_enc, alaw_dec, ulaw_enc, ulaw_dec)",
+    "method": "valid-qualified miter (gate.py after 2026-09-17 23:36)"
+  }
+}

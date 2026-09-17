@@ -1,0 +1,99 @@
+{
+  "run_id": "20260917-233054-tb-g711_ulaw_enc",
+  "module": "g711_ulaw_enc",
+  "kind": "testbench",
+  "outcome": "ACCEPTED",
+  "iterations": 3,
+  "max_iters": 3,
+  "min_kill_pct": 90.0,
+  "model": "deepseek/deepseek-v4.1-flash",
+  "server": "http://127.0.0.1:8659",
+  "testbench": "build/generate_tb/20260917-233054-tb-g711_ulaw_enc/iter3/tb_g711_ulaw_enc.sv",
+  "kill_pct": 100.0,
+  "attempts": [
+    {
+      "iteration": 1,
+      "usage": {
+        "prompt_tokens": 7316,
+        "completion_tokens": 25026,
+        "total_tokens": 32342
+      },
+      "llm_elapsed_s": 192.2,
+      "testbench": "build/generate_tb/20260917-233054-tb-g711_ulaw_enc/iter1/tb_g711_ulaw_enc.sv",
+      "check_elapsed_s": 0.0,
+      "sound": false,
+      "soundness": {
+        "compiled": true,
+        "timeout": false,
+        "result": null,
+        "checks": null,
+        "errors": [],
+        "other_errors": [
+          "ERROR: /Users/kos2001/gitspace/codec-agent/build/generate_tb/20260917-233054-tb-g711_ulaw_enc/iter1/tb_g711_ulaw_enc.sv:135: $urandom's seed must be an integer/time variable or a register."
+        ]
+      },
+      "log_tail": "ERROR: /Users/kos2001/gitspace/codec-agent/build/generate_tb/20260917-233054-tb-g711_ulaw_enc/iter1/tb_g711_ulaw_enc.sv:135: $urandom's seed must be an integer/time variable or a register.\n",
+      "verdict": "UNSOUND",
+      "evidence": "No `RESULT PASS|FAIL` line was printed.\nERROR: /Users/kos2001/gitspace/codec-agent/build/generate_tb/20260917-233054-tb-g711_ulaw_enc/iter1/tb_g711_ulaw_enc.sv:135: $urandom's seed must be an integer/time variable or a register."
+    },
+    {
+      "iteration": 2,
+      "usage": {
+        "prompt_tokens": 10166,
+        "completion_tokens": 5764,
+        "total_tokens": 15930
+      },
+      "llm_elapsed_s": 152.3,
+      "testbench": "build/generate_tb/20260917-233054-tb-g711_ulaw_enc/iter2/tb_g711_ulaw_enc.sv",
+      "check_elapsed_s": 0.8,
+      "sound": false,
+      "soundness": {
+        "compiled": true,
+        "timeout": false,
+        "result": "FAIL",
+        "checks": 147635,
+        "errors": [
+          [
+            "0000",
+            "0X",
+            "00"
+          ]
+        ],
+        "other_errors": []
+      },
+      "log_tail": "ERROR stim=0000 got=0X exp=00\nRESULT FAIL checks=147635 errors=1\n/Users/kos2001/gitspace/codec-agent/build/generate_tb/20260917-233054-tb-g711_ulaw_enc/iter2/tb_g711_ulaw_enc.sv:255: $finish called at 1909305 (1s)\n",
+      "verdict": "UNSOUND",
+      "evidence": "stim=0000: RTL delivered got=0X; your testbench expected exp=00; the authoritative value is ff"
+    },
+    {
+      "iteration": 3,
+      "usage": {
+        "prompt_tokens": 10143,
+        "completion_tokens": 6092,
+        "total_tokens": 16235
+      },
+      "llm_elapsed_s": 198.5,
+      "testbench": "build/generate_tb/20260917-233054-tb-g711_ulaw_enc/iter3/tb_g711_ulaw_enc.sv",
+      "check_elapsed_s": 12.3,
+      "sound": true,
+      "soundness": {
+        "compiled": true,
+        "timeout": false,
+        "result": "PASS",
+        "checks": 147635,
+        "errors": [],
+        "other_errors": []
+      },
+      "log_tail": "RESULT PASS checks=147635\n/Users/kos2001/gitspace/codec-agent/build/generate_tb/20260917-233054-tb-g711_ulaw_enc/iter3/tb_g711_ulaw_enc.sv:259: $finish called at 1909305 (1s)\n",
+      "kill": {
+        "mutants": 65,
+        "considered": 64,
+        "killed": 64,
+        "kill_pct": 100.0,
+        "survivors": []
+      },
+      "verdict": "ACCEPTED"
+    }
+  ],
+  "note": "A sound testbench agrees with RTL proven against ITU-T STL; kill rate is its detection power over the module's mutants. The gate's own testbench kills 100%."
+}
