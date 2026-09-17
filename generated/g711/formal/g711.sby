@@ -1,0 +1,58 @@
+# SymbiYosys tasks for G.711 RTL (adapted from hls-rtl formal/gamma.sby).
+#   prove_* : k-induction, UNBOUNDED, control + datapath.
+#   cover_* : reachability, so a passing proof is not vacuous.
+# MODE 0 alaw_enc, 1 alaw_dec, 2 ulaw_enc, 3 ulaw_dec
+
+[tasks]
+prove_alaw_enc
+prove_alaw_dec
+prove_ulaw_enc
+prove_ulaw_dec
+cover_alaw_enc
+cover_alaw_dec
+cover_ulaw_enc
+cover_ulaw_dec
+
+[options]
+prove_alaw_enc: mode prove
+prove_alaw_enc: depth 4
+prove_alaw_dec: mode prove
+prove_alaw_dec: depth 4
+prove_ulaw_enc: mode prove
+prove_ulaw_enc: depth 4
+prove_ulaw_dec: mode prove
+prove_ulaw_dec: depth 4
+cover_alaw_enc: mode cover
+cover_alaw_enc: depth 8
+cover_alaw_dec: mode cover
+cover_alaw_dec: depth 8
+cover_ulaw_enc: mode cover
+cover_ulaw_enc: depth 8
+cover_ulaw_dec: mode cover
+cover_ulaw_dec: depth 8
+
+[engines]
+smtbmc z3
+
+[script]
+read -formal -sv g711_alaw_enc.sv g711_alaw_dec.sv g711_ulaw_enc.sv g711_ulaw_dec.sv
+read -formal -sv g711_props.sv
+prove_alaw_enc: chparam -set MODE 0 g711_props
+cover_alaw_enc: chparam -set MODE 0 g711_props
+prove_alaw_dec: chparam -set MODE 1 g711_props
+cover_alaw_dec: chparam -set MODE 1 g711_props
+prove_ulaw_enc: chparam -set MODE 2 g711_props
+cover_ulaw_enc: chparam -set MODE 2 g711_props
+prove_ulaw_dec: chparam -set MODE 3 g711_props
+cover_ulaw_dec: chparam -set MODE 3 g711_props
+hierarchy -top g711_props
+proc
+flatten
+opt_clean
+
+[files]
+g711_props.sv
+../rtl/g711_alaw_enc.sv
+../rtl/g711_alaw_dec.sv
+../rtl/g711_ulaw_enc.sv
+../rtl/g711_ulaw_dec.sv
