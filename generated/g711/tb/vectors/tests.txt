@@ -1,0 +1,16 @@
+L1_alaw_enc 0 65536 1 L1_alaw_enc
+L1_ulaw_enc 2 65536 1 L1_ulaw_enc
+L1_alaw_dec 1 65536 1 L1_alaw_dec
+L1_ulaw_dec 3 65536 1 L1_ulaw_dec
+L1_alaw_rt 4 65536 1 L1_alaw_rt
+L1_ulaw_rt 5 65536 1 L1_ulaw_rt
+L2_alaw_dec_all 1 256 1 L2_alaw_dec_all
+L2_ulaw_dec_all 3 256 1 L2_ulaw_dec_all
+L3_alaw_enc_edges 0 116 1 L3_alaw_enc_edges
+L3_ulaw_enc_edges 2 132 1 L3_ulaw_enc_edges
+P_alaw_enc_fullrate 0 116 0 L3_alaw_enc_edges
+P_ulaw_enc_fullrate 2 132 0 L3_ulaw_enc_edges
+P_alaw_dec_fullrate 1 256 0 L2_alaw_dec_all
+P_ulaw_dec_fullrate 3 256 0 L2_ulaw_dec_all
+P_alaw_rt_fullrate 4 65536 0 L1_alaw_rt
+P_ulaw_rt_fullrate 5 65536 0 L1_ulaw_rt

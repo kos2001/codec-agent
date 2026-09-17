@@ -1,0 +1,60 @@
+{
+  "name": "baseline",
+  "verdict": "PROVEN",
+  "rtl_dir": "/Users/kos2001/gitspace/codec-agent/generated/g711/rtl",
+  "stages": {
+    "lint": "pass",
+    "synthesize": "pass",
+    "simulate": "pass",
+    "formal": "pass",
+    "equiv": "pass"
+  },
+  "details": {
+    "lint": "4 modules clean",
+    "synthesize": "alaw_enc=93 alaw_dec=105 ulaw_enc=140 ulaw_dec=84 cells",
+    "simulate": "16/16 tests pass",
+    "formal": "8/8 tasks (prove: unbounded, cover: reached)",
+    "equiv": "candidate is the baseline"
+  },
+  "tests": {
+    "L1_alaw_enc": "RESULT PASS n=65536 cycles=114105",
+    "L1_ulaw_enc": "RESULT PASS n=65536 cycles=114105",
+    "L1_alaw_dec": "RESULT PASS n=65536 cycles=114105",
+    "L1_ulaw_dec": "RESULT PASS n=65536 cycles=114105",
+    "L1_alaw_rt": "RESULT PASS n=65536 cycles=110288",
+    "L1_ulaw_rt": "RESULT PASS n=65536 cycles=110288",
+    "L2_alaw_dec_all": "RESULT PASS n=256 cycles=452",
+    "L2_ulaw_dec_all": "RESULT PASS n=256 cycles=452",
+    "L3_alaw_enc_edges": "RESULT PASS n=116 cycles=203",
+    "L3_ulaw_enc_edges": "RESULT PASS n=132 cycles=231",
+    "P_alaw_enc_fullrate": "RESULT PASS n=116 cycles=118",
+    "P_ulaw_enc_fullrate": "RESULT PASS n=132 cycles=134",
+    "P_alaw_dec_fullrate": "RESULT PASS n=256 cycles=258",
+    "P_ulaw_dec_fullrate": "RESULT PASS n=256 cycles=258",
+    "P_alaw_rt_fullrate": "RESULT PASS n=65536 cycles=65539",
+    "P_ulaw_rt_fullrate": "RESULT PASS n=65536 cycles=65539"
+  },
+  "first_errors": {},
+  "evidence_sha256": {
+    "L1_alaw_enc": "95d7acacea1447b47d2effdc59f872b9150ae49d68f6386e8516c5e3794b4a5a",
+    "L1_ulaw_enc": "68c1d4ee716f65029acd02b219709a9de5f5555cfec6b4f47da0f7f5e4333480",
+    "L1_alaw_dec": "9a71f4c53252b92175addec18c9c9a6c0d5706953a27c183c0980736267bfb28",
+    "L1_ulaw_dec": "1a95509bcaf09ba9b1144708eebb8fa0169c2fb3f8d5fe53b85698570fc1d50c",
+    "L1_alaw_rt": "9a71f4c53252b92175addec18c9c9a6c0d5706953a27c183c0980736267bfb28",
+    "L1_ulaw_rt": "1a95509bcaf09ba9b1144708eebb8fa0169c2fb3f8d5fe53b85698570fc1d50c",
+    "L2_alaw_dec_all": "e38248cd3dfcf669670b5e6eac23ca246d1975ddb91f806244698aa891459abf",
+    "L2_ulaw_dec_all": "f895dfd34404cd04244fdae784b00176d455eb32a43b117ba2efa7d635f2e309",
+    "L3_alaw_enc_edges": "07737dda9d85056b4ab48f7f0d0783c958d5b72e4e280bb1b55c3253570cf2f5",
+    "L3_ulaw_enc_edges": "742b954bf15e98be4fdd3384f31222a237067d07b1658181df699f0c8c7644de"
+  },
+  "rtl_sha256": {
+    "g711_alaw_enc": "284f248dfdd28b3652180528685e40f584bddc3dc52b7ce57ca6ddfb6fed3183",
+    "g711_alaw_dec": "1c30e6a6669085c07bc885dee2919f2175fb3aee38ed7584bef97f1585a16b89",
+    "g711_ulaw_enc": "7677b268347de9d425c940b7e4ea76a659b60d27536b4c97b379dbd3a55a131d",
+    "g711_ulaw_dec": "4be2be38edc103b0732398409c5387681a5673f6da47465888be8861ccdc2f62"
+  },
+  "elapsed_s": 4.8,
+  "proves": "For every module: (simulate) output is byte-identical to the ITU-T G.191 STL reference on its official sweep vectors (all 65536 16-bit inputs), to STL on all 256 decoder codes, and to the spec-table model on segment-edge vectors, under random stalls in a 4-state simulator; full-rate throughput is 1 sample/cycle; (formal, unbounded k-induction) on EVERY reachable trace: no sample lost, duplicated or invented, no false backpressure, output stable under stall, reset empties the stage, and every delivered value equals a reference model written from the G.711 table formulas.",
+  "does_not_prove": "Conformance to the G.711 PDF text itself (the spec PDF was not machine-read; the reference formulas were cross-checked against STL instead), Appendix I/II behaviour, timing closure/Fmax, area or power on a real library.",
+  "failure_evidence": ""
+}

@@ -1,0 +1,338 @@
+{
+  "total": 12,
+  "equivalent": 0,
+  "caught": 12,
+  "survived": 0,
+  "score_pct": 100.0,
+  "caught_by_stage": {
+    "lint": 4,
+    "synthesize": 0,
+    "simulate": 12,
+    "formal": 12
+  },
+  "caught_only_by_stage": {
+    "lint": 0,
+    "synthesize": 0,
+    "simulate": 0,
+    "formal": 0
+  },
+  "by_operator": {
+    "dropped-update": {
+      "caught": 12,
+      "survived": 0,
+      "equivalent": 0
+    }
+  },
+  "elapsed_s": 19.3,
+  "survivors": [],
+  "results": [
+    {
+      "id": "drop-33",
+      "module": "g711_alaw_dec",
+      "operator": "dropped-update",
+      "description": "deleted the update of out_valid",
+      "line": 33,
+      "before": "if (!rst_n)        out_valid <= 1'b0;",
+      "after": "if (!rst_n)        begin end",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_alaw_dec FAIL [A6_reset_empties]"
+      }
+    },
+    {
+      "id": "drop-34",
+      "module": "g711_alaw_dec",
+      "operator": "dropped-update",
+      "description": "deleted the update of out_valid",
+      "line": 34,
+      "before": "else if (in_ready) out_valid <= in_valid;",
+      "after": "else if (in_ready) begin end",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_alaw_dec FAIL [A2_valid_iff_pending]; cover_alaw_dec FAIL [C1_deliver, C2_push_while_pop, C3_stall]"
+      }
+    },
+    {
+      "id": "drop-38",
+      "module": "g711_alaw_dec",
+      "operator": "dropped-update",
+      "description": "deleted the update of out_pcm",
+      "line": 38,
+      "before": "if (in_ready && in_valid) out_pcm <= pcm;",
+      "after": "if (in_ready && in_valid) begin end",
+      "status": "caught",
+      "caught_by": [
+        "lint",
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "fail",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "lint": "g711_alaw_dec: %Warning-UNDRIVEN: /Users/kos2001/gitspace/codec-agent/build/mutate/cand/g711_alaw_dec-drop-38/g711_alaw_dec.sv:11:30: Signal is not driven: 'out_pcm'",
+        "simulate": "11/16 tests pass",
+        "formal": "prove_alaw_dec FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "drop-55",
+      "module": "g711_alaw_enc",
+      "operator": "dropped-update",
+      "description": "deleted the update of out_valid",
+      "line": 55,
+      "before": "if (!rst_n)        out_valid <= 1'b0;",
+      "after": "if (!rst_n)        begin end",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "13/16 tests pass",
+        "formal": "prove_alaw_enc FAIL [A6_reset_empties]"
+      }
+    },
+    {
+      "id": "drop-56",
+      "module": "g711_alaw_enc",
+      "operator": "dropped-update",
+      "description": "deleted the update of out_valid",
+      "line": 56,
+      "before": "else if (in_ready) out_valid <= in_valid;",
+      "after": "else if (in_ready) begin end",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_alaw_enc FAIL [A2_valid_iff_pending]; cover_alaw_enc FAIL [C1_deliver, C2_push_while_pop, C3_stall]"
+      }
+    },
+    {
+      "id": "drop-60",
+      "module": "g711_alaw_enc",
+      "operator": "dropped-update",
+      "description": "deleted the update of out_code",
+      "line": 60,
+      "before": "if (in_ready && in_valid) out_code <= code;",
+      "after": "if (in_ready && in_valid) begin end",
+      "status": "caught",
+      "caught_by": [
+        "lint",
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "fail",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "lint": "g711_alaw_enc: %Warning-UNDRIVEN: /Users/kos2001/gitspace/codec-agent/build/mutate/cand/g711_alaw_enc-drop-60/g711_alaw_enc.sv:13:30: Signal is not driven: 'out_code'",
+        "simulate": "11/16 tests pass",
+        "formal": "prove_alaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "drop-30",
+      "module": "g711_ulaw_dec",
+      "operator": "dropped-update",
+      "description": "deleted the update of out_valid",
+      "line": 30,
+      "before": "if (!rst_n)        out_valid <= 1'b0;",
+      "after": "if (!rst_n)        begin end",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_ulaw_dec FAIL [A6_reset_empties]"
+      }
+    },
+    {
+      "id": "drop-31",
+      "module": "g711_ulaw_dec",
+      "operator": "dropped-update",
+      "description": "deleted the update of out_valid",
+      "line": 31,
+      "before": "else if (in_ready) out_valid <= in_valid;",
+      "after": "else if (in_ready) begin end",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_ulaw_dec FAIL [A2_valid_iff_pending]; cover_ulaw_dec FAIL [C1_deliver, C2_push_while_pop, C3_stall]"
+      }
+    },
+    {
+      "id": "drop-35",
+      "module": "g711_ulaw_dec",
+      "operator": "dropped-update",
+      "description": "deleted the update of out_pcm",
+      "line": 35,
+      "before": "if (in_ready && in_valid) out_pcm <= pcm;",
+      "after": "if (in_ready && in_valid) begin end",
+      "status": "caught",
+      "caught_by": [
+        "lint",
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "fail",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "lint": "g711_ulaw_dec: %Warning-UNDRIVEN: /Users/kos2001/gitspace/codec-agent/build/mutate/cand/g711_ulaw_dec-drop-35/g711_ulaw_dec.sv:11:30: Signal is not driven: 'out_pcm'",
+        "simulate": "11/16 tests pass",
+        "formal": "prove_ulaw_dec FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "drop-59",
+      "module": "g711_ulaw_enc",
+      "operator": "dropped-update",
+      "description": "deleted the update of out_valid",
+      "line": 59,
+      "before": "if (!rst_n)        out_valid <= 1'b0;",
+      "after": "if (!rst_n)        begin end",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "13/16 tests pass",
+        "formal": "prove_ulaw_enc FAIL [A6_reset_empties]"
+      }
+    },
+    {
+      "id": "drop-60",
+      "module": "g711_ulaw_enc",
+      "operator": "dropped-update",
+      "description": "deleted the update of out_valid",
+      "line": 60,
+      "before": "else if (in_ready) out_valid <= in_valid;",
+      "after": "else if (in_ready) begin end",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_ulaw_enc FAIL [A2_valid_iff_pending]; cover_ulaw_enc FAIL [C1_deliver, C2_push_while_pop, C3_stall]"
+      }
+    },
+    {
+      "id": "drop-64",
+      "module": "g711_ulaw_enc",
+      "operator": "dropped-update",
+      "description": "deleted the update of out_code",
+      "line": 64,
+      "before": "if (in_ready && in_valid) out_code <= code;",
+      "after": "if (in_ready && in_valid) begin end",
+      "status": "caught",
+      "caught_by": [
+        "lint",
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "fail",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "lint": "g711_ulaw_enc: %Warning-UNDRIVEN: /Users/kos2001/gitspace/codec-agent/build/mutate/cand/g711_ulaw_enc-drop-64/g711_ulaw_enc.sv:13:30: Signal is not driven: 'out_code'",
+        "simulate": "11/16 tests pass",
+        "formal": "prove_ulaw_enc FAIL [A5_datapath_value]"
+      }
+    }
+  ]
+}
