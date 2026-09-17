@@ -131,12 +131,20 @@ def stage_synthesize(rtl: Path, build: Path, timeout: int) -> Tuple[str, str]:
         return "skip", "yosys not available"
     cells, bad = {}, []
     for m in MODULES:
-        script = (f"read_verilog -sv {rtl / (m + '.sv')}; synth -top {m} -flatten; check -assert; "
+        # REQ-IF-04 requires a synchronous reset. Simulation and formal sample reset at clock
+        # edges and cannot tell an async reset apart; the netlist can. Checked right after
+        # `proc`, before techmapping renames the cells. (Found by a Hermes-generated
+        # candidate that passed every other stage with `posedge clk or negedge rst_n`.)
+        script = (f"read_verilog -sv {rtl / (m + '.sv')}; hierarchy -top {m}; proc; "
+                  "select -assert-none t:$adff t:$adffe t:$aldff t:$aldffe t:$dffsr t:$dffsre t:$sr; "
+                  f"synth -top {m} -flatten; check -assert; "
                   "select -assert-none t:$dlatch t:$_DLATCH_*; stat")
         rc, out = _run(["yosys", "-q", "-p", script, "-l", str(build / f"synth_{m}.log")], build, timeout)
         log = (build / f"synth_{m}.log").read_text() if (build / f"synth_{m}.log").exists() else out
         if rc != 0:
             err = next((l for l in (out + log).splitlines() if "ERROR" in l), "synthesis failed")
+            if "Assertion failed" in err and ("$adff" in (out + log) or "adff" in err):
+                err = "REQ-IF-04 violated: asynchronous reset/set flip-flop (use always_ff @(posedge clk) with if (!rst_n))"
             bad.append(f"{m}: {err.strip()}")
             continue
         c = re.findall(r"^\s+(\d+)\s+cells\s*$", log, re.M)
@@ -208,9 +216,26 @@ def stage_formal(rtl: Path, build: Path, timeout: int) -> Tuple[str, str]:
     return ("fail", "; ".join(bad)) if bad else ("pass", f"{ok}/{len(tasks)} tasks (prove: unbounded, cover: reached)")
 
 
+def _valid_qualified_wrapper(module: str, inner: str, name: str) -> str:
+    """Expose the DUT with its data output masked by out_valid. Output data while
+    out_valid=0 is a don't-care of the interface (REQ-IF-03/05), so two designs that
+    differ only there are functionally equivalent and must not be reported as different."""
+    data, w = ("out_code", 8) if module.endswith("_enc") else ("out_pcm", 16)
+    din, dw = ("in_pcm", 16) if module.endswith("_enc") else ("in_code", 8)
+    return f"""module {name} (input logic clk, input logic rst_n, input logic in_valid, output logic in_ready,
+  input logic [{dw - 1}:0] {din}, output logic out_valid, input logic out_ready, output logic [{w - 1}:0] q);
+  logic [{w - 1}:0] d;
+  {inner} u (.clk(clk), .rst_n(rst_n), .in_valid(in_valid), .in_ready(in_ready), .{din}({din}),
+             .out_valid(out_valid), .out_ready(out_ready), .{data}(d));
+  assign q = out_valid ? d : '0;
+endmodule
+"""
+
+
 def stage_equiv(rtl: Path, build: Path, timeout: int, baseline: Path) -> Tuple[str, str]:
-    """Is the candidate logically the same design as the baseline? Information only:
-    it distinguishes 'regenerated but unchanged' from 'functionally different'."""
+    """Is the candidate functionally the same design as the baseline? Information only.
+    Valid-qualified sequential equivalence: miter over wrappers that mask output data by
+    out_valid, temporal induction from a common zero state."""
     if not shutil.which("yosys"):
         return "skip", "yosys not available"
     if rtl.resolve() == baseline.resolve():
@@ -220,19 +245,25 @@ def stage_equiv(rtl: Path, build: Path, timeout: int, baseline: Path) -> Tuple[s
         a, b = baseline / f"{m}.sv", rtl / f"{m}.sv"
         if a.read_bytes() == b.read_bytes():
             same.append(m); continue
-        gold, gate = build / f"eq_gold_{m}.sv", build / f"eq_gate_{m}.sv"
-        gold.write_text(re.sub(rf"\bmodule\s+{m}\b", "module gold", a.read_text(), count=1))
-        gate.write_text(re.sub(rf"\bmodule\s+{m}\b", "module gate", b.read_text(), count=1))
-        # miter + temporal induction from a common zero state. `equiv_make`/`equiv_induct`
-        # (the hls-rtl approach) left a cell unproven on a genuinely equivalent mutant.
-        script = (f"read_verilog -sv {gold} {gate}; proc; opt_clean; "
+        src = build / f"eq_{m}.sv"
+        src.write_text(
+            re.sub(rf"\bmodule\s+{m}\b", f"module {m}_gold", a.read_text(), count=1) + "\n" +
+            re.sub(rf"\bmodule\s+{m}\b", f"module {m}_gate", b.read_text(), count=1) + "\n" +
+            _valid_qualified_wrapper(m, f"{m}_gold", "gold") + _valid_qualified_wrapper(m, f"{m}_gate", "gate"))
+        script = (f"read_verilog -sv {src}; proc; flatten; opt_clean; "
                   "miter -equiv -flatten -make_outputs gold gate miter; hierarchy -top miter; opt_clean; "
                   "sat -verify -tempinduct -prove trigger 0 -set-init-zero -seq 1 -maxsteps 8 miter")
-        rc, _ = _run(["yosys", "-q", "-p", script], build, timeout)  # sat -verify: nonzero on failure
-        (same if rc == 0 else diff).append(m)
+        rc, out = _run(["yosys", "-q", "-p", script], build, timeout)
+        if rc == 0:
+            same.append(m)
+        elif "proof did fail" in out or "model found: FAIL" in out:
+            diff.append(m)
+        else:                     # a tool limitation is missing evidence, never "differs"
+            err = next((l for l in out.splitlines() if "ERROR" in l), out[-200:])
+            return "skip", f"{m}: equivalence not decidable here — {err.strip()}"
     if diff:
-        return "fail", "differs from baseline: " + ", ".join(diff)
-    return "pass", "equivalent to baseline (" + ", ".join(x.replace("g711_", "") for x in same) + ")"
+        return "fail", "functionally differs from baseline (valid-qualified): " + ", ".join(diff)
+    return "pass", "equivalent to baseline on valid outputs (" + ", ".join(x.replace("g711_", "") for x in same) + ")"
 
 
 # -------------------------------------------------------------------- gate ---

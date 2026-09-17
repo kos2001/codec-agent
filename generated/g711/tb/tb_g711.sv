@@ -72,10 +72,10 @@ module tb_g711;
     out_ready <= !rst_n ? 1'b0 : (BP == 0) ? 1'b1 : ($urandom % 3 != 0);  // stalled during reset
     if (rst_n && out_valid && out_ready) begin
       if (got >= N) begin
-        $display("ERROR extra output %h", out_data); errors <= errors + 1;
+        $display("ERROR extra output %h t=%0t", out_data, $time); errors <= errors + 1;
       end else if (out_data !== expv[got]) begin
         if (errors < 10)
-          $display("ERROR idx=%0d stim=%h got=%h exp=%h", got, stim[got], out_data, expv[got]);
+          $display("ERROR idx=%0d stim=%h got=%h exp=%h t=%0t", got, stim[got], out_data, expv[got], $time);
         errors <= errors + 1;
       end
       got <= got + 1;
@@ -93,7 +93,7 @@ module tb_g711;
     // release: no stale output, ready to accept. Released on a falling edge so no
     // clocked process races the deassertion (a posedge release hid a missing reset).
     if (out_valid !== 1'b0 || in_ready !== 1'b1) begin
-      $display("ERROR reset state out_valid=%b in_ready=%b", out_valid, in_ready); errors = errors + 1;
+      $display("ERROR reset state out_valid=%b in_ready=%b t=%0t", out_valid, in_ready, $time); errors = errors + 1;
     end
     in_valid = 1'b0;  // withdraw the garbage before release so it is never accepted
     rst_n = 1;

@@ -1,0 +1,122 @@
+{
+  "total": 4,
+  "equivalent": 0,
+  "caught": 4,
+  "survived": 0,
+  "score_pct": 100.0,
+  "caught_by_stage": {
+    "lint": 0,
+    "synthesize": 4,
+    "simulate": 0,
+    "formal": 0
+  },
+  "caught_only_by_stage": {
+    "lint": 0,
+    "synthesize": 4,
+    "simulate": 0,
+    "formal": 0
+  },
+  "by_operator": {
+    "reset-style": {
+      "caught": 4,
+      "survived": 0,
+      "equivalent": 0
+    }
+  },
+  "elapsed_s": 5.8,
+  "survivors": [],
+  "results": [
+    {
+      "id": "async-reset-32",
+      "module": "g711_alaw_dec",
+      "operator": "reset-style",
+      "description": "made the reset asynchronous",
+      "line": 32,
+      "before": "always_ff @(posedge clk) begin",
+      "after": "always_ff @(posedge clk or negedge rst_n) begin",
+      "status": "caught",
+      "caught_by": [
+        "synthesize"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "fail",
+        "simulate": "pass",
+        "formal": "pass",
+        "equiv": "skip"
+      },
+      "details": {
+        "synthesize": "g711_alaw_dec: REQ-IF-04 violated: asynchronous reset/set flip-flop (use always_ff @(posedge clk) with if (!rst_n))"
+      }
+    },
+    {
+      "id": "async-reset-54",
+      "module": "g711_alaw_enc",
+      "operator": "reset-style",
+      "description": "made the reset asynchronous",
+      "line": 54,
+      "before": "always_ff @(posedge clk) begin",
+      "after": "always_ff @(posedge clk or negedge rst_n) begin",
+      "status": "caught",
+      "caught_by": [
+        "synthesize"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "fail",
+        "simulate": "pass",
+        "formal": "pass",
+        "equiv": "skip"
+      },
+      "details": {
+        "synthesize": "g711_alaw_enc: REQ-IF-04 violated: asynchronous reset/set flip-flop (use always_ff @(posedge clk) with if (!rst_n))"
+      }
+    },
+    {
+      "id": "async-reset-29",
+      "module": "g711_ulaw_dec",
+      "operator": "reset-style",
+      "description": "made the reset asynchronous",
+      "line": 29,
+      "before": "always_ff @(posedge clk) begin",
+      "after": "always_ff @(posedge clk or negedge rst_n) begin",
+      "status": "caught",
+      "caught_by": [
+        "synthesize"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "fail",
+        "simulate": "pass",
+        "formal": "pass",
+        "equiv": "skip"
+      },
+      "details": {
+        "synthesize": "g711_ulaw_dec: REQ-IF-04 violated: asynchronous reset/set flip-flop (use always_ff @(posedge clk) with if (!rst_n))"
+      }
+    },
+    {
+      "id": "async-reset-58",
+      "module": "g711_ulaw_enc",
+      "operator": "reset-style",
+      "description": "made the reset asynchronous",
+      "line": 58,
+      "before": "always_ff @(posedge clk) begin",
+      "after": "always_ff @(posedge clk or negedge rst_n) begin",
+      "status": "caught",
+      "caught_by": [
+        "synthesize"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "fail",
+        "simulate": "pass",
+        "formal": "pass",
+        "equiv": "skip"
+      },
+      "details": {
+        "synthesize": "g711_ulaw_enc: REQ-IF-04 violated: asynchronous reset/set flip-flop (use always_ff @(posedge clk) with if (!rst_n))"
+      }
+    }
+  ]
+}

@@ -175,7 +175,20 @@ def _stuck_drop_mutants(src: str, module: str) -> List[Mutant]:
     return out
 
 
-_GENERATORS = (_swap_mutants, _constant_mutants, _slice_mutants, _mux_mutants, _stuck_drop_mutants)
+def _reset_style_mutants(src: str, module: str) -> List[Mutant]:
+    """Turn the synchronous reset into an asynchronous one — REQ-IF-04. Invisible to
+    clock-edge simulation and formal; a Hermes-generated candidate did exactly this."""
+    out = []
+    for n, text in _code_lines(src):
+        if re.search(r"always_ff\s*@\(\s*posedge\s+clk\s*\)", text) and "rst_n" in src.split("\n")[n]:
+            new = re.sub(r"@\(\s*posedge\s+clk\s*\)", "@(posedge clk or negedge rst_n)", text)
+            out.append(Mutant(f"async-reset-{n}", module, "reset-style", "made the reset asynchronous",
+                              n, text, new, _replace_line(src, n, new)))
+    return out
+
+
+_GENERATORS = (_swap_mutants, _constant_mutants, _slice_mutants, _mux_mutants, _stuck_drop_mutants,
+               _reset_style_mutants)
 
 
 def generate(modules=gate.MODULES) -> List[Mutant]:
@@ -264,7 +277,7 @@ def main() -> int:
     # restyle made `dropped-update` produce 0 mutants while the campaign reported 100%).
     expected = set(args.operator) if args.operator else {
         "relational", "arithmetic", "boolean", "inversion", "constant",
-        "slice-shift", "mux-swap", "stuck-at", "dropped-update"}
+        "slice-shift", "mux-swap", "stuck-at", "dropped-update", "reset-style"}
     produced = {m.operator for m in generate(modules)}
     if expected - produced:
         print(f"ERROR: no mutants generated for operator(s): {sorted(expected - produced)}", file=sys.stderr)
