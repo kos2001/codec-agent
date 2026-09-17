@@ -23,13 +23,32 @@ spec (G.711 PDF) ─► requirements.yaml ─► RTL
 | Gate | `PROVEN` — lint clean, 16/16 sim tests, 8/8 formal tasks (k-induction) |
 | Oracle vs STL | bit-exact on all 65536 inputs / 256 codes |
 | Oracle vs G.711 PDF | Tables 1a/1b/2a/2b rebuilt from printed columns: all 256 decoder codes, all encoder interval interiors |
-| Mutation coverage | 176/176 non-equivalent mutants caught |
+| Mutation coverage | all non-equivalent mutants caught (see `runs/*-mutate.json`) |
+| Hermes-generated RTL | all 4 modules PROVEN (deepseek-v4.1-flash; 1–2 iterations with gate evidence) |
+| Hermes-generated testbenches | all 4 ACCEPTED (sound on PROVEN RTL); mutant kill 92.9–100% — survivors are async-reset (invisible to simulation, caught by the gate's netlist check) and one missed stuck `in_ready` |
 
 Reports: [`claudedocs/phase0-report.md`](claudedocs/phase0-report.md) ·
 plan: [`claudedocs/spec-to-rtl-service-plan.md`](claudedocs/spec-to-rtl-service-plan.md) ·
 working notes and hard-won rules: [`CLAUDE.md`](CLAUDE.md)
 
-Verification approach adapted from [hls-rtl](https://github.com/kos2001/hls-rtl).
+Verification approach and workbench UI adapted from [hls-rtl](https://github.com/kos2001/hls-rtl).
+
+## Generation (Hermes) and workbench
+
+RTL generation goes through a local **Hermes Agent API server** (OpenAI-compatible, profile
+`codecagent`, port 8659, upstream LLM configurable — currently `deepseek/deepseek-v4.1-flash`).
+`pipeline/generate.py` sends requirements + the port contract (never the committed RTL), gates
+every candidate, and feeds the gate's failure evidence back for repair.
+
+```sh
+scripts/hermes_server.sh start                       # needs a hermes profile named codecagent
+printf 'HERMES_API_KEY=...\n' > .env                  # that profile's API_SERVER_KEY
+python3 pipeline/generate.py --health
+python3 pipeline/generate.py --module g711_ulaw_enc
+python3 pipeline/generate_tb.py --module g711_ulaw_enc   # Hermes testbench, judged by soundness + mutant kill rate
+python3 pipeline/waves.py --test L1_ulaw_enc             # VCD of a testbench run (also in the Waveform tab)
+.venv/bin/pip install fastapi uvicorn && scripts/workbench.sh   # http://127.0.0.1:8013
+```
 
 ## Run
 

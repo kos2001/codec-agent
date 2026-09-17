@@ -119,3 +119,37 @@ hls-rtl 대비 달라진 점:
 2. ④ LLM RTL 생성 → `gate.prove()` → 반려 시 `failure_evidence()` 피드백, 결과는 `PROVEN_CHANGE / ORACLE_CONFLICT / NO_CHANGE / EXHAUSTED`
 3. 재현성: 동일 requirements로 N회 생성해 PROVEN 도달률·반복 횟수 측정
 4. ~~G.711 PDF 확보 후 requirements.yaml 원문 대조~~ ✅ 완료 — ①단계 설계에 반영: 표가 그림인 PDF가 있으므로 텍스트 추출 + 페이지 렌더링(비전) 병행, 추출 표는 인쇄된 합계·끝점으로 자체 검증
+
+## 7. Phase 1 착수 — Hermes 생성 (2026-09-17~18)
+
+Hermes Agent API 서버(profile `codecagent`, :8659, OpenRouter `deepseek/deepseek-v4.1-flash`, tools off).
+프롬프트에는 requirements + port contract만 — 커밋 RTL/기대값 없음 (`tests/test_generate.py`가 강제).
+
+**RTL 생성** (`pipeline/generate.py`, gate가 판정)
+
+| module | 결과 | 반복 | 비고 |
+|---|---|---|---|
+| alaw_enc | PROVEN | 1 | 유효 출력 기준 ≡ baseline |
+| alaw_dec | PROVEN | 2 | iter1 lint(WIDTHEXPAND) 반려 → 근거로 수리 |
+| ulaw_enc | PROVEN | 2 | 첫 run은 비동기 리셋으로 PROVEN → **게이트 빈틈**. 합성 단계 REQ-IF-04 검사 추가 후 재생성: iter1 반려 → iter2 PROVEN |
+| ulaw_dec | PROVEN | 2 | 동일 |
+
+**Testbench 생성** (`pipeline/generate_tb.py`: soundness = 커밋 RTL에서 PASS, sensitivity = 뮤턴트 kill)
+
+| module | 결과 | 체크 수 | kill | 생존 뮤턴트 |
+|---|---|---|---|---|
+| ulaw_enc | ACCEPTED (3회) | 147,635 | 64/64 | (reset-style 연산자 추가 전 측정) |
+| alaw_dec | ACCEPTED (1회) | 315 | 26/28 | async reset, `in_ready` stuck-0 (TB가 수신 개수를 검사 안 함) |
+| ulaw_dec | ACCEPTED (2회) | 765 | 23/24 | async reset |
+| alaw_enc | 1차 EXHAUSTED → 재시도 ACCEPTED (1회) | 131,292 | 60/61 | async reset |
+
+**추가된 실패 유형**
+
+| # | 결함 | 발견 | 조치 |
+|---|---|---|---|
+| F14 | 게이트가 비동기 리셋 RTL을 PROVEN (sim/formal 모두 클럭 에지 샘플링) | 생성 RTL의 equiv 불일치 조사 | `synthesize`에 `$adff` 금지, `reset-style` 뮤턴트 → 181개 중 180/180 검출, 4개는 synthesize 단독 |
+| F15 | equiv가 도구 오류(async FF 모델 불가)를 "differs"로 보고 | 반례 추출 시도 | `proof did fail`만 differs, 그 외 skip |
+| F16 | equiv가 don't-care 데이터(out_valid=0) 차이로 불일치 | 생성 RTL 검토 | out_valid로 마스킹한 valid-qualified miter |
+| F17 | 생성 프롬프트에 lint 계약 부재 → sim/formal 통과해도 반려 | 첫 deepseek run | 프롬프트에 `-Wall` 계약 명시 |
+| F18 | 파형 창을 10 ns 주기로 가정 → timescale 없는 생성 TB에서 빈 파형 | 파형 확인 | clock edge 수로 창 지정 |
+| F19 | TB의 입력/출력 짝이 어긋난 것을 "기대값 오류"로 안내 | alaw_enc TB EXHAUSTED 분석 | 증명된 RTL과 모순되는 불일치를 misalignment로 안내 |
