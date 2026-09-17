@@ -1,0 +1,49 @@
+# G.711 requirements (Phase 0, hand-written)
+# Source: ITU-T G.711 (11/88), specs/g711/T-REC-G.711-198811-I-PDF-E.pdf
+#   sha256 4348b527fbb1488677503d3b0f65094fb8a4b01e159ce01d7adbc29d5efdc556
+# Checked against the PDF: tests/test_spec_tables.py rebuilds Tables 1a/1b/2a/2b
+# from their printed columns 2-3 and Notes 2-3 and compares all 256 decoder codes
+# and every encoder interval interior. Also bit-exact vs ITU-T G.191 STL.
+# `source:` on each item says where it comes from: a G.711 clause/table, or a
+# design decision (DESIGN) where the Recommendation leaves the choice open.
+
+scope:
+  include: [A-law encode, A-law decode, mu-law encode, mu-law decode]
+  exclude:
+    - Appendix I PLC, Appendix II CNG (not in the 11/88 edition)
+    - "§3.2 mu-law all-zero character suppression (00000010 instead of 00000000) — optional network feature"
+    - §3.5 Tables 3/4 mu-A / A-mu transcoding
+    - §4 serial bit order (parallel interface), §5 audio level / Tables 5-6
+
+interface:
+  REQ-IF-01: Linear PCM is 16-bit two's complement, left-justified (STL convention).
+  REQ-IF-02: Character (compressed) signal is 8 bits as transmitted on the line.
+  REQ-IF-03: Streaming handshake valid/ready; output registered (1 cycle latency when not stalled).
+  REQ-IF-04: Synchronous active-low reset clears out_valid.
+  REQ-IF-05: Data is held stable while out_valid && !out_ready (no loss, no duplication).
+
+alaw:
+  REQ-A-01: Encoder uses 13-bit scale, x13 = x16 >>> 3.  # source: §3.6 (13-bit uniform code), Table 1 Note 1 (4096 units)
+  REQ-A-02: "Negative inputs use magnitude = -x13 - 1 (decision boundary belongs to smaller magnitude)."  # source: DESIGN — §3.6 leaves decision-value inputs to the equipment spec; STL convention adopted
+  REQ-A-03: Magnitude saturates at 4095.
+  REQ-A-04: Segment 0 covers magnitude 0..31 with step size 2; segment s (1..7) covers 16*2^s..32*2^s-1 with step 2^s.  # source: Table 1a col 2-3 (spec segment 1 = 32x2 is RTL segments 0+1)
+  REQ-A-05: Character bit 7 = sign (1 = positive), bits 6..4 = segment, bits 3..0 = step.  # source: Table 1a/1b Note 2 (128+n / n); spec bit No.1 = RTL bit 7
+  REQ-A-06: Even bits are inverted on transmission (XOR 0x55).  # source: Table 1a/1b Note 2 (spec bits 2,4,6,8 = RTL bits 6,4,2,0)
+  REQ-A-07: "Decoder reconstruction (13-bit scale): seg 0 -> 2*step+1; seg s>0 -> (2*(16+step)+1) << (s-1)."  # source: Table 1a/1b Note 3, column 7
+  REQ-A-08: Decoder output = reconstruction << 3, negated when sign bit is 0.
+
+ulaw:
+  REQ-U-01: Encoder uses 14-bit scale, x14 = x16 >>> 2.  # source: §3.6 (14-bit uniform code), Table 2 Note 1 (8159 units)
+  REQ-U-02: Negative inputs use magnitude = -x14 - 1.  # source: DESIGN — §3.6; STL convention (so -1..-4 encode to negative zero 0x7F, a Table 2b code)
+  REQ-U-03: Biased magnitude v = magnitude + 33, saturated at 8191.
+  REQ-U-04: Segment s (0..7) covers v in 32*2^s..64*2^s-1 with step 2^(s+1).  # source: Table 2a col 2-3 (1x1 + 15x2, 16x4 ... 16x256), end points 31..8159 = 32*2^s-33
+  REQ-U-05: Transmitted bit 7 = sign (1 = positive), NOT inverted.  # source: Table 2a Note 2 (255-n), Table 2b Note 2 (127-n)
+  REQ-U-06: Transmitted bits 6..0 = ~{segment, step} (magnitude bits inverted). Positive zero -> 0xFF.  # source: Table 2a/2b Note 2 (character is the final line code)
+  REQ-U-07: "Decoder reconstruction (14-bit scale): ((2*(16+step)+1) << s) - 33."  # source: Table 2a/2b Note 3 (y_0 = 0), column 7
+  REQ-U-08: Decoder output = reconstruction << 2, negated when sign bit is 0.
+
+verification:
+  L1: STL official vectors sweep-r.{a,u,a-a,u-u,rea,reu} byte-identical.
+  L2: Exhaustive — all 65536 encoder inputs, all 256 decoder codes vs golden.
+  L3: Spec-table directed checks — segment boundaries +-1, saturation, zero codes, sign/inversion.
+  QG: "verilator --lint-only -Wall clean; yosys: no latches, no combinational loops."

@@ -1,0 +1,25 @@
+
+4. Printing statistics.
+
+=== g711_ulaw_enc ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      132 wires
+      161 wire bits
+       10 public wires
+       39 public wire bits
+        8 ports
+       30 port bits
+      140 cells
+        5   $_ANDNOT_
+       42   $_AND_
+       49   $_NAND_
+        4   $_NOR_
+        4   $_NOT_
+        1   $_ORNOT_
+        4   $_OR_
+        9   $_SDFFE_PN0P_
+       12   $_XNOR_
+       10   $_XOR_
+
