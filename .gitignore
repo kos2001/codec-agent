@@ -10,3 +10,4 @@ golden/g711/stl_out/
 # ITU-T G.711 PDF is "All rights reserved" — not redistributed. See specs/g711/README.md.
 specs/g711/*.pdf
 specs/g711/*.txt
+.env
