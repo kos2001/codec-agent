@@ -1,211 +1,242 @@
 module tb_g711_ulaw_dec;
 
-  logic               clk;
-  logic               rst_n;
-  logic               tb_in_valid;
-  logic [7:0]         tb_in_code;
-  logic               tb_out_ready;
+  // ---------------- DUT connections ----------------
+  logic        clk;
+  logic        rst_n;
+  logic        in_valid;
+  logic        in_ready;
+  logic [7:0]  in_code;
+  logic        out_valid;
+  logic        out_ready;
+  logic [15:0] out_pcm;
 
-  logic               in_ready;
-  logic               out_valid;
-  logic signed [15:0] out_pcm;
+  // ---------------- TB state (all module level) ----------------
+  logic [7:0]  stim_q [$];
+  logic [15:0] exp_q [$];
+  logic [7:0]  exp_src_q [$];
+  logic [15:0] hold_pcm;
+  logic [15:0] pcm_pre;
+  logic [15:0] exp_v;
+  logic [7:0]  src_v;
+  logic        ov_pre;      // out_valid during the previous cycle (pre-posedge)
+  logic        or_pre;      // out_ready during the previous cycle (pre-posedge)
+  logic        hold_valid;
+  integer      checks;
+  integer      errors;
+  integer      accepted;
+  integer      delivered;
+  integer      total_stim;
+  integer      gap;
+  integer      wcnt;
+  integer      seed;
+  integer      i;
+  integer      j;
 
-  integer seed;
-  integer rndv;
-  integer wd;
-  integer checks;
-  integer errors;
-  integer n_acc;
-  integer n_del;
-  integer idx;
-  integer n_codes;
-  integer i;
-  integer j;
-  integer done;
+  localparam integer NSTIM    = 264;     // 256 codes + 8 boundary/sign extras
+  localparam integer CLK_HALF = 5;
+  localparam integer MAXCYC   = 100000;  // bounded so a broken DUT cannot hang
 
-  logic        in_rdy;
-  logic        hold_active;
-  logic [15:0] held_pcm;
-  logic [15:0] expv;
-  logic [15:0] gotv;
-  logic [7:0]  codel;
-  logic [15:0] exp_q  [$];
-  logic [7:0]  expc_q [$];
-  logic [7:0]  code_list [0:1023];
-
+  // ---------------- DUT ----------------
   g711_ulaw_dec dut (
     .clk       (clk),
     .rst_n     (rst_n),
-    .in_valid  (tb_in_valid),
+    .in_valid  (in_valid),
     .in_ready  (in_ready),
-    .in_code   (tb_in_code),
+    .in_code   (in_code),
     .out_valid (out_valid),
-    .out_ready (tb_out_ready),
+    .out_ready (out_ready),
     .out_pcm   (out_pcm)
   );
 
-  // ---------------------------------------------------------------
-  // Reference model of the G.711 mu-law DECODER.
-  //   code[7]   : sign, 1 = positive, NOT inverted          (REQ-U-05)
-  //   code[6:0] : ~{segment[2:0], step[3:0]}                (REQ-U-06)
-  //   14-bit re : ((2*(16+step)+1) << seg) - 33             (REQ-U-07)
-  //   16-bit out: re << 2, magnitude negated when sign == 0 (REQ-U-08)
-  // Magnitude is held in a 32-bit intermediate and reduced with an
-  // explicit mask; negation is two's complement modulo 2^16.
-  // ---------------------------------------------------------------
-  function automatic logic [15:0] ref_ulaw_dec (input logic [7:0] code);
+  // ---------------- reference model ----------------
+  // REQ-U-05: transmitted bit7 = sign, 1 = positive (not inverted).
+  // REQ-U-06: bits 6..0 are the inverted magnitude {segment, step}.
+  // REQ-U-07: reconstruction = ((2*(16+step)+1) << segment) - 33 on the 14-bit scale.
+  // REQ-U-08: out_pcm = reconstruction << 2, negated when the sign bit is 0.
+  function automatic logic signed [15:0] ulaw_decode(input logic [7:0] code);
+    logic [6:0]  magv;
     logic [2:0]  seg;
-    logic [3:0]  stp;
-    logic [31:0] mag;
+    logic [3:0]  step;
+    logic [14:0] recon;
+    logic [15:0] lin;
     begin
-      seg = ~code[6:4];
-      stp = ~code[3:0];
-      mag = ((2 * (16 + stp) + 1) << seg) - 33;   // 14-bit reconstruction
-      mag = mag << 2;                             // 16-bit scale
-      mag = mag & 32'h0000_FFFF;
-      if (code[7]) ref_ulaw_dec = mag[15:0];
-      else         ref_ulaw_dec = 16'h0000 - mag[15:0];
+      magv  = ~code[6:0];
+      seg   = magv[6:4];
+      step  = magv[3:0];
+      recon = ((2 * (16 + step) + 1) << seg) - 33;
+      lin   = recon << 2;                       // <= 32124, fits as positive 15-bit
+      ulaw_decode = code[7] ? $signed({1'b0, lin[14:0]})
+                            : -$signed({1'b0, lin[14:0]});
     end
   endfunction
 
-  always #5 clk = ~clk;
+  always #CLK_HALF clk = ~clk;
 
-  // watchdog
-  always @(posedge clk) begin
-    if (rst_n === 1'b1) begin
-      wd = wd + 1;
-      if (wd > 40000) begin
-        $display("RESULT FAIL checks=%0d errors=%0d", checks, errors);
-        $finish;
-      end
-    end
+  // ---------------- watchdog ----------------
+  initial begin
+    #5000000;
+    $display("RESULT FAIL checks=%0d errors=%0d", checks, errors);
+    $finish;
   end
 
+  // ---------------- main ----------------
   initial begin
-    clk          = 1'b0;
-    rst_n        = 1'b0;
-    tb_in_valid  = 1'b0;
-    tb_in_code   = 8'h00;
-    tb_out_ready = 1'b0;
+    clk        = 1'b0;
+    rst_n      = 1'b0;
+    in_valid   = 1'b0;
+    out_ready  = 1'b0;
+    in_code    = 8'h00;
+    checks     = 0;
+    errors     = 0;
+    accepted   = 0;
+    delivered  = 0;
+    total_stim = 0;
+    gap        = 0;
+    wcnt       = 0;
+    hold_valid = 1'b0;
+    hold_pcm   = 16'h0000;
+    pcm_pre    = 16'h0000;
+    ov_pre     = 1'b0;
+    or_pre     = 1'b0;
+    exp_v      = 16'h0000;
+    src_v      = 8'h00;
+    seed       = 32'd20240918;
+    i          = $urandom(seed);      // one seeding call, then $urandom with no arg
+    j          = 0;
 
-    checks = 0; errors = 0; n_acc = 0; n_del = 0; wd = 0;
-    hold_active = 1'b0; held_pcm = 16'h0000; done = 0;
-    codel = 8'h00; expv = 16'h0000; gotv = 16'h0000;
-
-    seed = 32'd20260917;
-    rndv = $urandom(seed);          // one seeding call, then bare $urandom
-
-    // ---- stimulus list: all 256 codes plus boundary / zero / sign cases
-    n_codes = 0;
-    for (i = 0; i < 256; i = i + 1) begin
-      code_list[n_codes] = i[7:0];
-      n_codes = n_codes + 1;
-    end
-    // every segment, first and last step, both signs
-    for (i = 0; i < 8; i = i + 1) begin
-      for (j = 0; j < 16; j = j + 15) begin
-        code_list[n_codes] = {1'b1, ~i[2:0], ~j[3:0]}; n_codes = n_codes + 1;
-        code_list[n_codes] = {1'b0, ~i[2:0], ~j[3:0]}; n_codes = n_codes + 1;
-      end
-    end
-    code_list[n_codes] = 8'hFF; n_codes = n_codes + 1; // positive zero (decodes 0)
-    code_list[n_codes] = 8'h7F; n_codes = n_codes + 1; // negative zero (decodes 0)
-    code_list[n_codes] = 8'h00; n_codes = n_codes + 1; // full negative
-    code_list[n_codes] = 8'h80; n_codes = n_codes + 1; // full positive
-    code_list[n_codes] = 8'h01; n_codes = n_codes + 1;
-    code_list[n_codes] = 8'h81; n_codes = n_codes + 1;
-
-    // ---- reset for several cycles, out_valid must be clear (REQ-IF-04)
-    repeat (6) @(negedge clk);
+    // ---------- 1. reset, hostile environment (in_valid=1, out_ready=0) ----------
+    rst_n = 1'b0; in_valid = 1'b1; out_ready = 1'b0; in_code = 8'hA5;   // REQ-IF-04
+    repeat (4) @(negedge clk);
     checks = checks + 1;
-    if (out_valid !== 1'b0) begin
-      errors = errors + 1;
-      $display("ERROR stim=%h got=%h exp=%h", 16'h0000, {15'b0, out_valid}, 16'h0000);
-    end
+    if (out_valid !== 1'b0) begin errors = errors + 1; $display("ERROR out_valid=%b after reset", out_valid); end
+    checks = checks + 1;
+    if (in_ready !== 1'b1) begin errors = errors + 1; $display("ERROR in_ready=%b during reset", in_ready); end
+    repeat (2) @(negedge clk);
+    checks = checks + 1;
+    if (out_valid !== 1'b0) begin errors = errors + 1; $display("ERROR out_valid=%b during hostile reset", out_valid); end
+
+    // ---------- 2. REQ-IF-04 is a SYNCHRONOUS reset ----------
+    in_code = 8'h3C;
+    rst_n = 1'b1; in_valid = 1'b1; out_ready = 1'b0;
+    @(negedge clk);                  // sample accepted at the next posedge
+    @(negedge clk);                  // output now held
+    checks = checks + 1;
+    if (out_valid !== 1'b1) begin errors = errors + 1; $display("ERROR out_valid=%b expected held output", out_valid); end
+    checks = checks + 1;
+    if (in_ready !== 1'b0) begin errors = errors + 1; $display("ERROR in_ready=%b with held output", in_ready); end
+    rst_n = 1'b0;                    // dropped between two clock edges
+    #1;                              // settle: no clock edge occurs
+    checks = checks + 1;
+    if (out_valid !== 1'b1) begin errors = errors + 1; $display("ERROR out_valid cleared before the clock edge (asynchronous reset)"); end
+    @(posedge clk);
+    @(negedge clk);
+    checks = checks + 1;
+    if (out_valid !== 1'b0) begin errors = errors + 1; $display("ERROR out_valid=%b not cleared at the clock edge", out_valid); end
     rst_n = 1'b1;
 
-    idx = 0;
-    while (!done) begin
+    // ---------- 3. stimuli ----------
+    for (i = 0; i < 256; i = i + 1) stim_q.push_back(i[7:0]);   // every code, REQ-IF-02
+    stim_q.push_back(8'h00);   // negative full scale (sign bit 0)
+    stim_q.push_back(8'h7F);   // negative zero, REQ-U-02
+    stim_q.push_back(8'hFF);   // positive zero, REQ-U-06
+    stim_q.push_back(8'h80);   // positive full scale, REQ-U-08
+    stim_q.push_back(8'h81);   // first negative segment code
+    stim_q.push_back(8'hFE);   // smallest positive magnitude step
+    stim_q.push_back(8'h10);   // segment/step boundary
+    stim_q.push_back(8'h8F);   // segment/step boundary, negative side
+
+    // clean state before the streaming phase
+    in_valid = 1'b0; out_ready = 1'b0; in_code = 8'h00;
+    rst_n = 1'b0;
+    repeat (2) @(negedge clk);
+    rst_n = 1'b1;
+    @(negedge clk);
+
+    accepted = 0; delivered = 0; total_stim = 0; gap = 0; wcnt = 0;
+    hold_valid = 1'b0; ov_pre = 1'b0; or_pre = 1'b0; pcm_pre = 16'h0000;
+    in_valid = 1'b0; out_ready = 1'b0; in_code = 8'h00;
+
+    // ---------- 4. streaming handshake phase ----------
+    while (((total_stim < NSTIM) || (accepted > delivered) || ov_pre || out_valid || in_valid)
+           && (wcnt < MAXCYC)) begin
       @(negedge clk);
+      wcnt = wcnt + 1;
 
-      // random valid gaps and ready stalls with a fixed seed
-      rndv = $urandom();
-      if ((idx < n_codes) && ((rndv % 4) != 0)) tb_in_valid = 1'b1;
-      else                                      tb_in_valid = 1'b0;
-      if (idx < n_codes) tb_in_code = code_list[idx];
-
-      rndv = $urandom();
-      if ((rndv % 8) == 0) tb_out_ready = 1'b0;
-      else                 tb_out_ready = 1'b1;
-
-      #1;  // let the DUT's combinational in_ready settle
-
-      // handshake contract: in_ready = ~out_valid | out_ready
-      in_rdy = ~out_valid | tb_out_ready;
+      // handshake contract checked on the live combinational value
       checks = checks + 1;
-      if (in_ready !== in_rdy) begin
+      if (in_ready !== (~out_valid | out_ready)) begin
         errors = errors + 1;
-        $display("ERROR stim=%h got=%h exp=%h", 16'h0000, {15'b0, in_ready}, {15'b0, in_rdy});
+        $display("ERROR in_ready=%b exp=%b", in_ready, (~out_valid | out_ready));
       end
 
-      // output must stay stable while out_valid && !out_ready (REQ-IF-05)
-      if (out_valid && !tb_out_ready) begin
-        checks = checks + 1;
-        if (hold_active) begin
-          if (out_pcm !== held_pcm) begin
+      // ---- delivery that happened at the clock edge just passed ----
+      if (ov_pre && or_pre) begin
+        if (exp_q.size() == 0) begin
+          checks = checks + 1; errors = errors + 1;
+          $display("ERROR stim=%h got=%h exp=%h", 16'h0000, pcm_pre, 16'h0000);
+        end else begin
+          exp_v = exp_q[0];     exp_q.pop_front();
+          src_v = exp_src_q[0]; exp_src_q.pop_front();
+          checks = checks + 1;
+          if (pcm_pre !== exp_v) begin
             errors = errors + 1;
-            $display("ERROR stim=%h got=%h exp=%h", 16'h0000, out_pcm, held_pcm);
+            $display("ERROR stim=%h got=%h exp=%h", {8'h00, src_v}, pcm_pre, exp_v);
+          end
+          delivered = delivered + 1;
+        end
+        hold_valid = 1'b0;
+      end else if (ov_pre) begin
+        // ---- REQ-IF-05: data stable while out_valid && !out_ready ----
+        if (hold_valid) begin
+          checks = checks + 1;
+          if (pcm_pre !== hold_pcm) begin
+            errors = errors + 1;
+            $display("ERROR held data got=%h exp=%h", pcm_pre, hold_pcm);
           end
         end else begin
-          hold_active = 1'b1;
+          hold_valid = 1'b1;
+          hold_pcm   = pcm_pre;
         end
-        held_pcm = out_pcm;
       end else begin
-        hold_active = 1'b0;
+        hold_valid = 1'b0;
       end
 
-      // sample accepted at the upcoming clock edge
-      if (tb_in_valid && in_rdy) begin
-        exp_q.push_back(ref_ulaw_dec(tb_in_code));  // 16-bit expectation (REQ-U-07/08)
-        expc_q.push_back(tb_in_code);
-        n_acc = n_acc + 1;
-        idx   = idx + 1;
+      // ---- acceptance that happened at the clock edge just passed ----
+      if (in_valid && (~ov_pre | or_pre)) begin
+        exp_q.push_back(ulaw_decode(in_code));   // REQ-IF-01 / REQ-IF-02
+        exp_src_q.push_back(in_code);
+        accepted = accepted + 1;
+        in_valid = 1'b0;
       end
 
-      // sample delivered at the upcoming clock edge
-      if (out_valid && tb_out_ready) begin
-        checks = checks + 1;
-        if (exp_q.size() > 0) begin
-          expv  = exp_q.pop_front();
-          codel = expc_q.pop_front();
-          if (out_pcm !== expv) begin
-            errors = errors + 1;
-            $display("ERROR stim=%h got=%h exp=%h", {8'h00, codel}, out_pcm, expv);
-          end
-        end else begin
-          errors = errors + 1;
-          $display("ERROR stim=%h got=%h exp=%h", 16'h0000, out_pcm, 16'h0000);
-        end
-        n_del = n_del + 1;
+      // ---- drive for the next clock edge ----
+      out_ready = (($urandom % 3) != 0);         // pseudo-random stalls
+      if (gap > 0) gap = gap - 1;
+      if (!in_valid && (total_stim < NSTIM) && (gap == 0) && (stim_q.size() > 0)) begin
+        in_code = stim_q[0];                     // REQ-IF-02
+        stim_q.pop_front();
+        in_valid = 1'b1;
+        total_stim = total_stim + 1;
+        if (($urandom % 3) == 0) gap = 1 + ($urandom % 3);   // pseudo-random valid gaps
       end
 
-      if ((idx >= n_codes) && (exp_q.size() == 0) && (out_valid === 1'b0))
-        done = 1;
+      // capture pre-edge values for the next iteration
+      ov_pre  = out_valid;
+      or_pre  = out_ready;
+      pcm_pre = out_pcm;
     end
 
-    // no loss, no duplication
+    // ---------- 5. accounting ----------
     checks = checks + 1;
-    if (n_del !== n_acc) begin
-      errors = errors + 1;
-      gotv = n_del;
-      expv = n_acc;
-      $display("ERROR stim=%h got=%h exp=%h", 16'h0000, gotv, expv);
-    end
+    if (accepted !== NSTIM) begin errors = errors + 1; $display("ERROR accepted=%0d exp=%0d", accepted, NSTIM); end
     checks = checks + 1;
-    if (exp_q.size() != 0) begin
-      errors = errors + 1;
-      $display("ERROR stim=%h got=%h exp=%h", 16'h0000, 16'h0001, 16'h0000);
-    end
+    if (delivered !== accepted) begin errors = errors + 1; $display("ERROR delivered=%0d accepted=%0d", delivered, accepted); end
+    checks = checks + 1;
+    if (total_stim !== NSTIM) begin errors = errors + 1; $display("ERROR stimuli issued=%0d exp=%0d", total_stim, NSTIM); end
+    checks = checks + 1;
+    if (exp_q.size() != 0) begin errors = errors + 1; $display("ERROR %0d expected samples undelivered", exp_q.size()); end
+    checks = checks + 1;
+    if (out_valid !== 1'b0) begin errors = errors + 1; $display("ERROR out_valid=%b stuck at end", out_valid); end
 
     if (errors == 0) $display("RESULT PASS checks=%0d", checks);
     else             $display("RESULT FAIL checks=%0d errors=%0d", checks, errors);
