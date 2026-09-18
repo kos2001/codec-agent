@@ -12,6 +12,7 @@ import { Properties } from './Properties'
 import { Splitter, applySavedPanes, resetPanes } from './Splitter'
 import type { GenerateRunSummary, Health, ModuleInfo, MutationRun, Proof, Requirements, TestRun } from './types'
 import { DocsView, MutationView, RtlView, SignoffView, SpecView } from './Views'
+import { ImprovePane } from './Improve'
 import { WaveformPane } from './Waveform'
 import type { WaveRequest } from './Waveform'
 
@@ -21,7 +22,7 @@ import type { WaveRequest } from './Waveform'
  * writes severity-tagged lines into one transcript.
  */
 
-type View = 'overview' | 'signoff' | 'spec' | 'mutation' | 'generate' | 'waveform' | 'rtl' | 'docs'
+type View = 'overview' | 'signoff' | 'spec' | 'mutation' | 'generate' | 'waveform' | 'improve' | 'rtl' | 'docs'
 
 const VIEWS: { id: View; label: string }[] = [
   { id: 'overview', label: 'Overview' },
@@ -30,6 +31,7 @@ const VIEWS: { id: View; label: string }[] = [
   { id: 'mutation', label: 'Mutation' },
   { id: 'generate', label: 'Generate' },
   { id: 'waveform', label: 'Waveform' },
+  { id: 'improve', label: 'Improve' },
   { id: 'rtl', label: 'RTL' },
   { id: 'docs', label: 'Docs' },
 ]
@@ -301,6 +303,7 @@ function Workbench() {
             {view === 'mutation' && <MutationView run={mutation} busy={busy === 'mutation'} onRun={runMutation} />}
             {view === 'generate' && <GeneratePane health={health} onRunsChanged={() => void loadRuns()} onWave={showWave} />}
             {view === 'waveform' && <WaveformPane request={waveReq} />}
+            {view === 'improve' && <ImprovePane />}
             {view === 'rtl' && (
               <>
                 <div className="pane-toolbar">

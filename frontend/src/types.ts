@@ -240,3 +240,34 @@ export interface WaveCapture {
 }
 
 export interface GateTestInfo { name: string; mode: number; n: number; bp: number; stem: string }
+
+// ---------- Self-improvement ----------
+export interface ImproveRec { id: string; priority: number; action: string | null; why: string }
+
+export interface ImproveRound {
+  round: number
+  at?: string
+  recommendation?: { id: string; action: string | null }
+  result?: { cmd: string; rc: number; elapsed_s: number; tail: string[] }
+  metrics_after?: Record<string, number>
+  delta?: { better: Record<string, number[]>; worse: Record<string, number[]>; regressed: boolean }
+}
+
+export interface ImproveReport {
+  snapshot: Record<string, unknown>
+  metrics: Record<string, number>
+  recommendations: ImproveRec[]
+  history: ImproveRound[]
+}
+
+export interface KbHit {
+  key: string; kind: string; module: string; stage: string
+  bm25: number; overlap: number; symptom: string; resolution: string; source: string
+}
+
+export interface KbStats {
+  cases: number
+  by_kind: Record<string, number>
+  by_stage: Record<string, number>
+  eval: Record<string, unknown>
+}
