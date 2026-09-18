@@ -1,0 +1,77 @@
+{
+  "run_id": "20260918-103150-tb-g711_alaw_enc",
+  "module": "g711_alaw_enc",
+  "kind": "testbench",
+  "outcome": "ACCEPTED",
+  "iterations": 1,
+  "max_iters": 3,
+  "min_kill_pct": 90.0,
+  "model": "deepseek/deepseek-v4.1-flash",
+  "server": "http://127.0.0.1:8659",
+  "testbench": "build/generate_tb/20260918-103150-tb-g711_alaw_enc/iter1/tb_g711_alaw_enc.sv",
+  "kill_pct": 100.0,
+  "blind_classes": [],
+  "attempts": [
+    {
+      "iteration": 1,
+      "usage": {
+        "prompt_tokens": 7513,
+        "completion_tokens": 40911,
+        "total_tokens": 48424
+      },
+      "llm_elapsed_s": 779.5,
+      "testbench": "build/generate_tb/20260918-103150-tb-g711_alaw_enc/iter1/tb_g711_alaw_enc.sv",
+      "check_elapsed_s": 24.2,
+      "sound": true,
+      "soundness": {
+        "compiled": true,
+        "timeout": false,
+        "result": "PASS",
+        "checks": 238432,
+        "errors": [],
+        "other_errors": []
+      },
+      "log_tail": "RESULT PASS checks=238432\n/Users/kos2001/gitspace/codec-agent/build/generate_tb/20260918-103150-tb-g711_alaw_enc/iter1/tb_g711_alaw_enc.sv:301: $finish called at 1296160 (1s)\n",
+      "kill": {
+        "mutants": 62,
+        "considered": 61,
+        "killed": 61,
+        "kill_pct": 100.0,
+        "by_class": {
+          "boolean": {
+            "killed": 2,
+            "survived": 0
+          },
+          "constant": {
+            "killed": 29,
+            "survived": 0
+          },
+          "dropped-update": {
+            "killed": 3,
+            "survived": 0
+          },
+          "inversion": {
+            "killed": 4,
+            "survived": 0
+          },
+          "reset-style": {
+            "killed": 1,
+            "survived": 0
+          },
+          "slice-shift": {
+            "killed": 20,
+            "survived": 0
+          },
+          "stuck-at": {
+            "killed": 2,
+            "survived": 0
+          }
+        },
+        "blind_classes": [],
+        "survivors": []
+      },
+      "verdict": "ACCEPTED"
+    }
+  ],
+  "note": "A sound testbench agrees with RTL proven against ITU-T STL; kill rate is its detection power over the module's mutants. The gate's own testbench kills 100%."
+}

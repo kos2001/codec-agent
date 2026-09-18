@@ -143,6 +143,15 @@ Hermes Agent API 서버(profile `codecagent`, :8659, OpenRouter `deepseek/deepse
 | ulaw_dec | ACCEPTED (2회) | 765 | 23/24 | async reset |
 | alaw_enc | 1차 EXHAUSTED → 재시도 ACCEPTED (1회) | 131,292 | 60/61 | async reset |
 
+**2차 (보강 후, §8)** — 계약에 클럭 에지 사이 리셋 검사·수신 개수 검사 추가, 결함 유형별 최소 검출 요구
+
+| module | 결과 | 체크 수 | kill |
+|---|---|---|---|
+| alaw_enc | ACCEPTED (1회) | 238,432 | 61/61 |
+| alaw_dec | ACCEPTED (2회) | 368 | 28/28 |
+| ulaw_enc | ACCEPTED (3회) | 196,929 | 65/65 |
+| ulaw_dec | ACCEPTED (2회) | 776 | 24/24 |
+
 **추가된 실패 유형**
 
 | # | 결함 | 발견 | 조치 |
@@ -153,3 +162,19 @@ Hermes Agent API 서버(profile `codecagent`, :8659, OpenRouter `deepseek/deepse
 | F17 | 생성 프롬프트에 lint 계약 부재 → sim/formal 통과해도 반려 | 첫 deepseek run | 프롬프트에 `-Wall` 계약 명시 |
 | F18 | 파형 창을 10 ns 주기로 가정 → timescale 없는 생성 TB에서 빈 파형 | 파형 확인 | clock edge 수로 창 지정 |
 | F19 | TB의 입력/출력 짝이 어긋난 것을 "기대값 오류"로 안내 | alaw_enc TB EXHAUSTED 분석 | 증명된 RTL과 모순되는 불일치를 misalignment로 안내 |
+
+## 8. 실패 사례 보강 (2026-09-18)
+
+1차 실행에서 fail로 끝난 사례를 분류하고, 각각을 도구가 잡도록 보강했다.
+
+| 실패 사례 | 건수 | 보강 | 확인 |
+|---|---|---|---|
+| 비동기 리셋 RTL이 게이트를 통과 / 생성 TB가 놓침 | RTL 4, TB 3 | `tb_g711`에 **클럭 에지 사이 리셋 검사** 추가(출력 유지 상태에서 rst_n을 내려도 다음 posedge까지 불변), TB 계약에도 동일 항목 | 뮤테이션 재측정: `reset-style` 4건을 **synthesize + simulate 양쪽**이 검출, **단독 검출 stage 0** |
+| TB가 약해서 결함을 놓침 (`in_ready` stuck-0 등) | 4 | 유형별 최소 검출 요구(`REQUIRED_CLASSES`), WEAK도 수리 루프 진입, 힌트는 **동작 수준**(RTL 비노출) | 재생성 4/4 ACCEPTED, 전부 100% kill, blind class 0 |
+| TB 불건전 (실행 오류·참조 모델 오류·입출력 짝 어긋남) | 6 | 프롬프트에 iverilog 제약(`$urandom(seed)`), 근거에 misalignment 진단 추가 | 2차 생성에서 불건전 반복 3회→최대 2회 |
+| RTL 반려 (lint 폭, 비동기 리셋) | 5 | 프롬프트에 lint 계약 + **동기 리셋 명시** | — (재생성 시 확인 예정) |
+| 클라이언트 타임아웃으로 ERRORED | 3 | `HERMES_TIMEOUT` 상향(600s → 2400s, 실측 13분) | 재실행 3/3 정상 완료 |
+
+**뮤테이션 재측정 (`runs/20260918-110525-mutate.json`)**: 181개 중 등가 1개 제외 **180/180 검출**,
+stage별 검출 lint 44 · synthesize 6 · simulate 180 · formal 176, **단독 검출 0** —
+어느 한 stage가 빠져도 검출력이 유지된다.

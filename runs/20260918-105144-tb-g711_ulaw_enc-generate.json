@@ -1,0 +1,133 @@
+{
+  "run_id": "20260918-105144-tb-g711_ulaw_enc",
+  "module": "g711_ulaw_enc",
+  "kind": "testbench",
+  "outcome": "ACCEPTED",
+  "iterations": 3,
+  "max_iters": 3,
+  "min_kill_pct": 90.0,
+  "model": "deepseek/deepseek-v4.1-flash",
+  "server": "http://127.0.0.1:8659",
+  "testbench": "build/generate_tb/20260918-105144-tb-g711_ulaw_enc/iter3/tb_g711_ulaw_enc.sv",
+  "kill_pct": 100.0,
+  "blind_classes": [],
+  "attempts": [
+    {
+      "iteration": 1,
+      "usage": {
+        "prompt_tokens": 7507,
+        "completion_tokens": 25135,
+        "total_tokens": 32642
+      },
+      "llm_elapsed_s": 264.9,
+      "testbench": "build/generate_tb/20260918-105144-tb-g711_ulaw_enc/iter1/tb_g711_ulaw_enc.sv",
+      "check_elapsed_s": 0.1,
+      "sound": false,
+      "soundness": {
+        "compiled": false,
+        "result": null,
+        "checks": null,
+        "errors": [],
+        "other_errors": []
+      },
+      "log_tail": "rror in task arguments.\n/Users/kos2001/gitspace/codec-agent/build/generate_tb/20260918-105144-tb-g711_ulaw_enc/iter1/tb_g711_ulaw_enc.sv:154: syntax error\n/Users/kos2001/gitspace/codec-agent/build/generate_tb/20260918-105144-tb-g711_ulaw_enc/iter1/tb_g711_ulaw_enc.sv:154: error: Syntax error in task arguments.\n/Users/kos2001/gitspace/codec-agent/build/generate_tb/20260918-105144-tb-g711_ulaw_enc/iter1/tb_g711_ulaw_enc.sv:155: syntax error\n/Users/kos2001/gitspace/codec-agent/build/generate_tb/20260918-105144-tb-g711_ulaw_enc/iter1/tb_g711_ulaw_enc.sv:155: error: Syntax error in task arguments.\n",
+      "verdict": "UNSOUND",
+      "evidence": "COMPILE ERROR (iverilog -g2012):\nitspace/codec-agent/build/generate_tb/20260918-105144-tb-g711_ulaw_enc/iter1/tb_g711_ulaw_enc.sv:149: syntax error\n/Users/kos2001/gitspace/codec-agent/build/generate_tb/20260918-105144-tb-g711_ulaw_enc/iter1/tb_g711_ulaw_enc.sv:149: error: Syntax error in task arguments.\n/Users/kos2001/gitspace/codec-agent/build/generate_tb/20260918-105144-tb-g711_ulaw_enc/iter1/tb_g711_ulaw_enc.sv:150: syntax error\n/Users/kos2001/gitspace/codec-agent/build/generate_tb/20260918-105144-tb-g711_ulaw_enc/iter1/tb_g711_ulaw_enc.sv:150: error: Syntax error in task arguments.\n/Users/kos2001/gitspace/codec-agent/build/generate_tb/20260918-105144-tb-g711_ulaw_enc/iter1/tb_g711_ulaw_enc.sv:151: syntax error\n/Users/kos2001/gitspace/codec-agent/build/generate_tb/20260918-105144-tb-g711_ulaw_enc/iter1/tb_g711_ulaw_enc.sv:151: error: Syntax error in task arguments.\n/Users/kos2001/gitspace/codec-agent/build/generate_tb/20260918-105144-tb-g711_ulaw_enc/iter1/tb_g711_ulaw_enc.sv:152: syntax error\n/Users/kos2001/gitspace/codec-agent/build/generate_tb/20260918-105144-tb-g711_ulaw_enc/iter1/tb_g711_ulaw_enc.sv:152: error: Syntax error in task arguments.\n/Users/kos2001/gitspace/codec-agent/build/generate_tb/20260918-105144-tb-g711_ulaw_enc/iter1/tb_g711_ulaw_enc.sv:153: syntax error\n/Users/kos2001/gitspace/codec-agent/build/generate_tb/20260918-105144-tb-g711_ulaw_enc/iter1/tb_g711_ulaw_enc.sv:153: error: Syntax error in task arguments.\n/Users/kos2001/gitspace/codec-agent/build/generate_tb/20260918-105144-tb-g711_ulaw_enc/iter1/tb_g711_ulaw_enc.sv:154: syntax error\n/Users/kos2001/gitspace/codec-agent/build/generate_tb/20260918-105144-tb-g711_ulaw_enc/iter1/tb_g711_ulaw_enc.sv:154: error: Syntax error in task arguments.\n/Users/kos2001/gitspace/codec-agent/build/generate_tb/20260918-105144-tb-g711_ulaw_enc/iter1/tb_g711_ulaw_enc.sv:155: syntax error\n/Users/kos2001/gitspace/codec-agent/build/generate_tb/20260918-105144-tb-g711_ulaw_enc/iter1/tb_g711_ulaw_enc.sv:155: error: Syntax error in task arguments.\n"
+    },
+    {
+      "iteration": 2,
+      "usage": {
+        "prompt_tokens": 11651,
+        "completion_tokens": 7857,
+        "total_tokens": 19508
+      },
+      "llm_elapsed_s": 81.5,
+      "testbench": "build/generate_tb/20260918-105144-tb-g711_ulaw_enc/iter2/tb_g711_ulaw_enc.sv",
+      "check_elapsed_s": 1.0,
+      "sound": false,
+      "soundness": {
+        "compiled": true,
+        "timeout": false,
+        "result": "FAIL",
+        "checks": 2,
+        "errors": [],
+        "other_errors": [
+          "ERROR delivered=65609 accepted=65610",
+          "ERROR delivered=65609 intended=65610"
+        ]
+      },
+      "log_tail": "ERROR delivered=65609 accepted=65610\nERROR delivered=65609 intended=65610\nWARNING: /Users/kos2001/gitspace/codec-agent/build/generate_tb/20260918-105144-tb-g711_ulaw_enc/iter2/tb_g711_ulaw_enc.sv:304: missing argument for $display<%0d>.\nRESULT FAIL checks=2 errors=<%0d>\n/Users/kos2001/gitspace/codec-agent/build/generate_tb/20260918-105144-tb-g711_ulaw_enc/iter2/tb_g711_ulaw_enc.sv:307: $finish called at 2095491 (1s)\n",
+      "verdict": "UNSOUND",
+      "evidence": "ERROR delivered=65609 accepted=65610\nERROR delivered=65609 intended=65610"
+    },
+    {
+      "iteration": 3,
+      "usage": {
+        "prompt_tokens": 10903,
+        "completion_tokens": 15324,
+        "total_tokens": 26227
+      },
+      "llm_elapsed_s": 212.0,
+      "testbench": "build/generate_tb/20260918-105144-tb-g711_ulaw_enc/iter3/tb_g711_ulaw_enc.sv",
+      "check_elapsed_s": 11.8,
+      "sound": true,
+      "soundness": {
+        "compiled": true,
+        "timeout": false,
+        "result": "PASS",
+        "checks": 196929,
+        "errors": [],
+        "other_errors": []
+      },
+      "log_tail": "RESULT PASS checks=196929\n/Users/kos2001/gitspace/codec-agent/build/generate_tb/20260918-105144-tb-g711_ulaw_enc/iter3/tb_g711_ulaw_enc.sv:308: $finish called at 1095501 (1s)\n",
+      "kill": {
+        "mutants": 66,
+        "considered": 65,
+        "killed": 65,
+        "kill_pct": 100.0,
+        "by_class": {
+          "arithmetic": {
+            "killed": 1,
+            "survived": 0
+          },
+          "boolean": {
+            "killed": 1,
+            "survived": 0
+          },
+          "constant": {
+            "killed": 29,
+            "survived": 0
+          },
+          "dropped-update": {
+            "killed": 3,
+            "survived": 0
+          },
+          "inversion": {
+            "killed": 6,
+            "survived": 0
+          },
+          "mux-swap": {
+            "killed": 1,
+            "survived": 0
+          },
+          "reset-style": {
+            "killed": 1,
+            "survived": 0
+          },
+          "slice-shift": {
+            "killed": 21,
+            "survived": 0
+          },
+          "stuck-at": {
+            "killed": 2,
+            "survived": 0
+          }
+        },
+        "blind_classes": [],
+        "survivors": []
+      },
+      "verdict": "ACCEPTED"
+    }
+  ],
+  "note": "A sound testbench agrees with RTL proven against ITU-T STL; kill rate is its detection power over the module's mutants. The gate's own testbench kills 100%."
+}
