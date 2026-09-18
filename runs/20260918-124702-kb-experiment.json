@@ -1,0 +1,298 @@
+{
+  "model": "deepseek/deepseek-v4.1-flash",
+  "fixtures": 6,
+  "repeats": 1,
+  "summary": {
+    "nokb": {
+      "n": 6,
+      "repaired": 3,
+      "rate": 0.5,
+      "with_citations": 0
+    },
+    "kb": {
+      "n": 6,
+      "repaired": 3,
+      "rate": 0.5,
+      "with_citations": 6
+    }
+  },
+  "rows": [
+    {
+      "arm": "nokb",
+      "id": "20260917-233054-tb-g711_ulaw_enc-iter1",
+      "kind": "testbench",
+      "module": "g711_ulaw_enc",
+      "stage": "unsound",
+      "repaired": false,
+      "detail": {
+        "verdict": "UNSOUND",
+        "sound": false,
+        "kill_pct": null
+      },
+      "citations": [],
+      "llm_s": 164.5,
+      "usage": {
+        "prompt_tokens": 10357,
+        "completion_tokens": 11043,
+        "total_tokens": 21400
+      },
+      "repeat": 0
+    },
+    {
+      "arm": "kb",
+      "id": "20260917-233054-tb-g711_ulaw_enc-iter1",
+      "kind": "testbench",
+      "module": "g711_ulaw_enc",
+      "stage": "unsound",
+      "repaired": false,
+      "detail": {
+        "verdict": "UNSOUND",
+        "sound": false,
+        "kill_pct": null
+      },
+      "citations": [
+        "rule-3",
+        "rule-4",
+        "rule-1"
+      ],
+      "llm_s": 257.2,
+      "usage": {
+        "prompt_tokens": 10696,
+        "completion_tokens": 15499,
+        "total_tokens": 26195
+      },
+      "repeat": 0
+    },
+    {
+      "arm": "nokb",
+      "id": "20260917-234503-tb-g711_alaw_enc-iter1",
+      "kind": "testbench",
+      "module": "g711_alaw_enc",
+      "stage": "unsound",
+      "repaired": false,
+      "detail": {
+        "verdict": "UNSOUND",
+        "sound": false,
+        "kill_pct": null
+      },
+      "citations": [],
+      "llm_s": 779.7,
+      "usage": {
+        "prompt_tokens": 11184,
+        "completion_tokens": 46566,
+        "total_tokens": 57750
+      },
+      "repeat": 0
+    },
+    {
+      "arm": "kb",
+      "id": "20260917-234503-tb-g711_alaw_enc-iter1",
+      "kind": "testbench",
+      "module": "g711_alaw_enc",
+      "stage": "unsound",
+      "repaired": true,
+      "detail": {
+        "verdict": "ACCEPTED",
+        "sound": true,
+        "kill_pct": 100.0
+      },
+      "citations": [
+        "rule-3",
+        "rule-8",
+        "rule-1"
+      ],
+      "llm_s": 327.4,
+      "usage": {
+        "prompt_tokens": 11486,
+        "completion_tokens": 21111,
+        "total_tokens": 32597
+      },
+      "repeat": 0
+    },
+    {
+      "arm": "nokb",
+      "id": "20260917-235823-tb-g711_ulaw_dec-iter1",
+      "kind": "testbench",
+      "module": "g711_ulaw_dec",
+      "stage": "unsound",
+      "repaired": true,
+      "detail": {
+        "verdict": "ACCEPTED",
+        "sound": true,
+        "kill_pct": 100.0
+      },
+      "citations": [],
+      "llm_s": 717.5,
+      "usage": {
+        "prompt_tokens": 10047,
+        "completion_tokens": 42864,
+        "total_tokens": 52911
+      },
+      "repeat": 0
+    },
+    {
+      "arm": "kb",
+      "id": "20260917-235823-tb-g711_ulaw_dec-iter1",
+      "kind": "testbench",
+      "module": "g711_ulaw_dec",
+      "stage": "unsound",
+      "repaired": false,
+      "detail": {
+        "verdict": "UNSOUND",
+        "sound": false,
+        "kill_pct": null
+      },
+      "citations": [
+        "rule-3",
+        "rule-8",
+        "rule-1"
+      ],
+      "llm_s": 482.3,
+      "usage": {
+        "prompt_tokens": 10349,
+        "completion_tokens": 24917,
+        "total_tokens": 35266
+      },
+      "repeat": 0
+    },
+    {
+      "arm": "nokb",
+      "id": "20260918-101619-tb-g711_ulaw_dec-iter1",
+      "kind": "testbench",
+      "module": "g711_ulaw_dec",
+      "stage": "unsound",
+      "repaired": true,
+      "detail": {
+        "verdict": "ACCEPTED",
+        "sound": true,
+        "kill_pct": 100.0
+      },
+      "citations": [],
+      "llm_s": 371.4,
+      "usage": {
+        "prompt_tokens": 10709,
+        "completion_tokens": 16998,
+        "total_tokens": 27707
+      },
+      "repeat": 0
+    },
+    {
+      "arm": "kb",
+      "id": "20260918-101619-tb-g711_ulaw_dec-iter1",
+      "kind": "testbench",
+      "module": "g711_ulaw_dec",
+      "stage": "unsound",
+      "repaired": true,
+      "detail": {
+        "verdict": "ACCEPTED",
+        "sound": true,
+        "kill_pct": 100.0
+      },
+      "citations": [
+        "rule-1",
+        "rule-3",
+        "rule-4"
+      ],
+      "llm_s": 294.4,
+      "usage": {
+        "prompt_tokens": 11048,
+        "completion_tokens": 11903,
+        "total_tokens": 22951
+      },
+      "repeat": 0
+    },
+    {
+      "arm": "nokb",
+      "id": "20260918-104514-tb-g711_alaw_dec-iter1",
+      "kind": "testbench",
+      "module": "g711_alaw_dec",
+      "stage": "unsound",
+      "repaired": true,
+      "detail": {
+        "verdict": "ACCEPTED",
+        "sound": true,
+        "kill_pct": 100.0
+      },
+      "citations": [],
+      "llm_s": 101.9,
+      "usage": {
+        "prompt_tokens": 11148,
+        "completion_tokens": 5593,
+        "total_tokens": 16741
+      },
+      "repeat": 0
+    },
+    {
+      "arm": "kb",
+      "id": "20260918-104514-tb-g711_alaw_dec-iter1",
+      "kind": "testbench",
+      "module": "g711_alaw_dec",
+      "stage": "unsound",
+      "repaired": true,
+      "detail": {
+        "verdict": "ACCEPTED",
+        "sound": true,
+        "kill_pct": 100.0
+      },
+      "citations": [
+        "rule-3",
+        "rule-8",
+        "rule-1"
+      ],
+      "llm_s": 118.7,
+      "usage": {
+        "prompt_tokens": 11450,
+        "completion_tokens": 5646,
+        "total_tokens": 17096
+      },
+      "repeat": 0
+    },
+    {
+      "arm": "nokb",
+      "id": "20260918-105144-tb-g711_ulaw_enc-iter1",
+      "kind": "testbench",
+      "module": "g711_ulaw_enc",
+      "stage": "unsound",
+      "repaired": false,
+      "detail": {
+        "verdict": "UNSOUND",
+        "sound": false,
+        "kill_pct": null
+      },
+      "citations": [],
+      "llm_s": 490.0,
+      "usage": {
+        "prompt_tokens": 11651,
+        "completion_tokens": 23609,
+        "total_tokens": 35260
+      },
+      "repeat": 0
+    },
+    {
+      "arm": "kb",
+      "id": "20260918-105144-tb-g711_ulaw_enc-iter1",
+      "kind": "testbench",
+      "module": "g711_ulaw_enc",
+      "stage": "unsound",
+      "repaired": false,
+      "detail": {
+        "verdict": "UNSOUND",
+        "sound": false,
+        "kill_pct": null
+      },
+      "citations": [
+        "rule-2",
+        "rule-9",
+        "rule-6"
+      ],
+      "llm_s": 676.4,
+      "usage": {
+        "prompt_tokens": 11952,
+        "completion_tokens": 29527,
+        "total_tokens": 41479
+      },
+      "repeat": 0
+    }
+  ],
+  "note": "Each fixture's own run is excluded from the KB, so any hit comes from a different failure. Judged by gate.prove / generate_tb.check, not by the model."
+}
