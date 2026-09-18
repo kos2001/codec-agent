@@ -137,11 +137,27 @@ def extract_module(reply: str, module: str) -> Optional[str]:
     return m.group(0).strip() + "\n" if m else None
 
 
-def _evidence(proof: gate.Proof, build: Path, module: str) -> str:
+def _evidence(proof: gate.Proof, build: Path, module: str, candidate: Optional[Path] = None) -> str:
     lines = [proof.failure_evidence()]
     lint_log = build / f"lint_{module}.log"
     if proof.stages.get("lint") == "fail" and lint_log.exists():
-        lines += [l for l in lint_log.read_text().splitlines() if l.startswith("%")][:8]
+        diag = [l for l in lint_log.read_text().splitlines() if l.startswith("%")][:8]
+        lines += diag
+        # Quote the offending source lines. Without them the model fixes the warning it
+        # imagines and introduces another one (observed: three iterations, three different
+        # lint failures on the same module).
+        if candidate and candidate.exists():
+            src = candidate.read_text().splitlines()
+            quoted = {}
+            for d in diag:
+                m = re.search(r"\.sv:(\d+):(\d+):", d)
+                if m:
+                    n = int(m.group(1))
+                    for j in range(max(1, n - 1), min(len(src), n + 1) + 1):
+                        quoted.setdefault(j, src[j - 1])
+            if quoted:
+                lines.append("The lines the linter points at (from your code):")
+                lines += [f"  {j}: {t}" for j, t in sorted(quoted.items())]
     return "\n".join(lines)[:4000]
 
 
@@ -184,7 +200,7 @@ def run(module: str, *, max_iters: int = 3, client: Optional[HermesClient] = Non
         if proof.verdict == "PROVEN":
             outcome, proven = "PROVEN", record
             break
-        evidence = _evidence(proof, run_dir / "gate" / proof.name, module)
+        evidence = _evidence(proof, run_dir / "gate" / proof.name, module, cand / f"{module}.sv")
         record["evidence"] = evidence
         prompt = build_repair_prompt(module, code, evidence, i)
 

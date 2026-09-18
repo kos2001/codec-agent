@@ -1,0 +1,458 @@
+{
+  "schema_version": 1,
+  "cases": [
+    {
+      "key": "rule-1",
+      "kind": "rule",
+      "module": "*",
+      "stage": "rule",
+      "symptom": "A skipped stage is missing evidence, not a pass",
+      "root_cause": "known pitfall in this repository",
+      "resolution": "**A skipped stage is missing evidence, not a pass.** Any gating skip ⇒ `INCONCLUSIVE`.",
+      "source": "CLAUDE.md",
+      "entities": [],
+      "content_hash": "116ff3357b50"
+    },
+    {
+      "key": "rule-2",
+      "kind": "rule",
+      "module": "*",
+      "stage": "rule",
+      "symptom": "Round-trip tests cannot validate a codec",
+      "root_cause": "known pitfall in this repository",
+      "resolution": "**Round-trip tests cannot validate a codec.** The first μ-law model inverted the sign bit in both encoder and decoder; encode→decode still matched STL 65536/65536. Only the one-direction comparisons caught it. Keep L1 enc and dec vectors separate.",
+      "source": "CLAUDE.md",
+      "entities": [],
+      "content_hash": "0cff138ade5e"
+    },
+    {
+      "key": "rule-3",
+      "kind": "rule",
+      "module": "*",
+      "stage": "rule",
+      "symptom": "A passing suite must be shown to fail",
+      "root_cause": "known pitfall in this repository",
+      "resolution": "**A passing suite must be shown to fail.** Before trusting a new check, break the RTL and watch it go red. The first mutation harness reported \"0 detected\" for every mutant because `head -4` cut the `RESULT` line — a harness bug, not a clean design.",
+      "source": "CLAUDE.md",
+      "entities": [],
+      "content_hash": "cef01de08629"
+    },
+    {
+      "key": "rule-4",
+      "kind": "rule",
+      "module": "*",
+      "stage": "rule",
+      "symptom": "Reset must be tested against a hostile environment",
+      "root_cause": "known pitfall in this repository",
+      "resolution": "**Reset must be tested against a hostile environment.** Releasing reset on a posedge, with `in_valid=0`/`out_ready=1` during reset, let a design with no `out_valid` reset pass all simulation. The TB now drives garbage (`in_valid=1`, `out_ready=0`) during reset and releases on a negedge; formal `A6_reset_empties` covers it independently.",
+      "source": "CLAUDE.md",
+      "entities": [
+        "a6_reset_empties",
+        "formal",
+        "in_valid",
+        "negedge",
+        "out_ready",
+        "out_valid",
+        "posedge"
+      ],
+      "content_hash": "861d0ef9c188"
+    },
+    {
+      "key": "rule-5",
+      "kind": "rule",
+      "module": "*",
+      "stage": "rule",
+      "symptom": "Watch shift-amount widths",
+      "root_cause": "known pitfall in this repository",
+      "resolution": "**Watch shift-amount widths.** `3'd2 + seg` is 3 bits: segments 6/7 wrap to 0/1.",
+      "source": "CLAUDE.md",
+      "entities": [],
+      "content_hash": "cdab899e4bea"
+    },
+    {
+      "key": "rule-6",
+      "kind": "rule",
+      "module": "*",
+      "stage": "rule",
+      "symptom": "Formal properties speak about ports only",
+      "root_cause": "known pitfall in this repository",
+      "resolution": "**Formal properties speak about ports only.** A hierarchical reference in yosys becomes an undriven wire — a free variable that proves nothing while appearing to run.",
+      "source": "CLAUDE.md",
+      "entities": [
+        "formal"
+      ],
+      "content_hash": "9ca9655e8755"
+    },
+    {
+      "key": "rule-7",
+      "kind": "rule",
+      "module": "*",
+      "stage": "rule",
+      "symptom": "`equiv_make`/`equiv_induct` is not enough to classify equivalent mutants; the gate\n  uses ",
+      "root_cause": "known pitfall in this repository",
+      "resolution": "**`equiv_make`/`equiv_induct` is not enough** to classify equivalent mutants; the gate uses `miter` + `sat -tempinduct`.",
+      "source": "CLAUDE.md",
+      "entities": [],
+      "content_hash": "74203f9197d9"
+    },
+    {
+      "key": "rule-8",
+      "kind": "rule",
+      "module": "*",
+      "stage": "rule",
+      "symptom": "Datapath registers are not reset (only `out_valid`, REQ-IF-04)",
+      "root_cause": "known pitfall in this repository",
+      "resolution": "**Datapath registers are not reset** (only `out_valid`, REQ-IF-04). A data reset value is unobservable, so mutating it only produces un-killable mutants.",
+      "source": "CLAUDE.md",
+      "entities": [
+        "out_valid",
+        "req-if-04"
+      ],
+      "content_hash": "5bef24b0bf1a"
+    },
+    {
+      "key": "rule-9",
+      "kind": "rule",
+      "module": "*",
+      "stage": "rule",
+      "symptom": "Candidates get isolated build dirs (`RTL_DIR`, `BUILD` for run_all",
+      "root_cause": "known pitfall in this repository",
+      "resolution": "**Candidates get isolated build dirs** (`RTL_DIR`, `BUILD` for run_all.sh; `build/gate/<name>`), so parallel mutants never share artifacts.",
+      "source": "CLAUDE.md",
+      "entities": [],
+      "content_hash": "5e61f19027ea"
+    },
+    {
+      "key": "rule-10",
+      "kind": "rule",
+      "module": "*",
+      "stage": "rule",
+      "symptom": "ITU blocks plain HTTP clients (curl gets \"Request Rejected\" / 500)",
+      "root_cause": "known pitfall in this repository",
+      "resolution": "ITU blocks plain HTTP clients (curl gets \"Request Rejected\" / 500). A real browser session works: load the Recommendation page, then `fetch()` the `dologin_pub.asp ... !!PDF-E` URL in-page.",
+      "source": "CLAUDE.md",
+      "entities": [],
+      "content_hash": "8cc71af968cc"
+    },
+    {
+      "key": "rule-11",
+      "kind": "rule",
+      "module": "*",
+      "stage": "rule",
+      "symptom": "G",
+      "root_cause": "known pitfall in this repository",
+      "resolution": "**G.711 Tables 1/2 are images in the PDF.** Text extraction returns the prose and silently drops the tables. Render the pages and read them; `tests/test_spec_tables.py` is the machine-checkable transcription (rebuilt from columns 2-3 and Notes 2-3 only).",
+      "source": "CLAUDE.md",
+      "entities": [],
+      "content_hash": "1f82220f5653"
+    },
+    {
+      "key": "rule-12",
+      "kind": "rule",
+      "module": "*",
+      "stage": "rule",
+      "symptom": "G",
+      "root_cause": "known pitfall in this repository",
+      "resolution": "G.711 §3.6 leaves inputs exactly on a decision value to the implementation. REQ-A-02/U-02 are a DESIGN choice (STL convention), not spec text — do not \"fix\" them toward the PDF.",
+      "source": "CLAUDE.md",
+      "entities": [
+        "req-a-02"
+      ],
+      "content_hash": "81020f7e603c"
+    },
+    {
+      "key": "rule-13",
+      "kind": "rule",
+      "module": "*",
+      "stage": "rule",
+      "symptom": "STL's CTest assumes an in-source working dir; run `g711demo` directly (see crosscheck",
+      "root_cause": "known pitfall in this repository",
+      "resolution": "STL's CTest assumes an in-source working dir; run `g711demo` directly (see crosscheck.py).",
+      "source": "CLAUDE.md",
+      "entities": [],
+      "content_hash": "e47ba222a6c2"
+    },
+    {
+      "key": "rule-14",
+      "kind": "rule",
+      "module": "*",
+      "stage": "rule",
+      "symptom": "State the gate's lint contract in the generation prompt",
+      "root_cause": "known pitfall in this repository",
+      "resolution": "**State the gate's lint contract in the generation prompt.** The first deepseek run produced candidates that passed all 16 simulation tests and all 8 formal tasks on iteration 1 and were still rejected — by `verilator -Wall` width/unused warnings the prompt never mentioned.",
+      "source": "CLAUDE.md",
+      "entities": [
+        "formal",
+        "lint"
+      ],
+      "content_hash": "50197235c0f5"
+    },
+    {
+      "key": "rule-15",
+      "kind": "rule",
+      "module": "*",
+      "stage": "rule",
+      "symptom": "A fault only one stage can see is a fragile check",
+      "root_cause": "known pitfall in this repository",
+      "resolution": "**A fault only one stage can see is a fragile check.** Track `caught_only_by_stage` in the mutation report: it was 4 (synthesize) for async reset until `tb_g711` learned the mid-cycle reset check; it is 0 now.",
+      "source": "CLAUDE.md",
+      "entities": [
+        "async",
+        "synthesize"
+      ],
+      "content_hash": "7b03633d307c"
+    },
+    {
+      "key": "rule-16",
+      "kind": "rule",
+      "module": "*",
+      "stage": "rule",
+      "symptom": "A PROVEN verdict is only as strong as the gate that issued it",
+      "root_cause": "known pitfall in this repository",
+      "resolution": "**A PROVEN verdict is only as strong as the gate that issued it.** Hermes produced μ-law candidates with `always_ff @(posedge clk or negedge rst_n)` that passed lint, 4-state sim and unbounded formal — all sample reset at clock edges. REQ-IF-04 (synchronous reset) is now a netlist check in `synthesize` (no `$adff`/`$aldff`/`$dffsr` after `proc`), with a `reset-style` mutation operator proving it. Archived runs from the weaker gate carry a `regate` field.",
+      "source": "CLAUDE.md",
+      "entities": [
+        "always_ff",
+        "clk",
+        "formal",
+        "lint",
+        "negedge",
+        "posedge",
+        "req-if-04",
+        "reset-style",
+        "rst_n",
+        "synchronous",
+        "synthesize"
+      ],
+      "content_hash": "48576bf0c59b"
+    },
+    {
+      "key": "rule-17",
+      "kind": "rule",
+      "module": "*",
+      "stage": "rule",
+      "symptom": "A tool error is not a verdict",
+      "root_cause": "known pitfall in this repository",
+      "resolution": "**A tool error is not a verdict.** `equiv` reported \"differs\" when yosys simply could not model an async FF. It now distinguishes `proof did fail` (differs) from other errors (skip).",
+      "source": "CLAUDE.md",
+      "entities": [
+        "async",
+        "equiv"
+      ],
+      "content_hash": "b8b3a45ab8cf"
+    },
+    {
+      "key": "rule-18",
+      "kind": "rule",
+      "module": "*",
+      "stage": "rule",
+      "symptom": "Compare data only where it is defined",
+      "root_cause": "known pitfall in this repository",
+      "resolution": "**Compare data only where it is defined.** `equiv` masks output data with `out_valid`; a design that differs only in don't-care data (e.g. data register not updated during reset) is equivalent.",
+      "source": "CLAUDE.md",
+      "entities": [
+        "equiv",
+        "out_valid"
+      ],
+      "content_hash": "64809724fc6a"
+    },
+    {
+      "key": "rule-19",
+      "kind": "rule",
+      "module": "*",
+      "stage": "rule",
+      "symptom": "Waveform windows are counted in clock edges, not time",
+      "root_cause": "known pitfall in this repository",
+      "resolution": "**Waveform windows are counted in clock edges, not time.** Generated testbenches often omit `timescale; a 10 ns assumption produced an empty trace. `wave_dump` is a separate root (`iverilog -s <tb> -s wave_dump`) so no testbench is ever edited to get a waveform.",
+      "source": "CLAUDE.md",
+      "entities": [],
+      "content_hash": "06049b807b47"
+    },
+    {
+      "key": "rule-20",
+      "kind": "rule",
+      "module": "*",
+      "stage": "rule",
+      "symptom": "Parse the field you mean",
+      "root_cause": "known pitfall in this repository",
+      "resolution": "**Parse the field you mean.** `t=(\\d+)` matched the `t=` inside `got=0001`; anchor trailing fields.",
+      "source": "CLAUDE.md",
+      "entities": [],
+      "content_hash": "698f6188b199"
+    },
+    {
+      "key": "rule-21",
+      "kind": "rule",
+      "module": "*",
+      "stage": "rule",
+      "symptom": "Long generations need a long client timeout",
+      "root_cause": "known pitfall in this repository",
+      "resolution": "**Long generations need a long client timeout.** With the strengthened testbench contract deepseek took 13 minutes for one reply; `HERMES_TIMEOUT` (repo `.env`, default 600 s) is the limit, and a timeout is reported as `ERRORED`, not as a bad testbench.",
+      "source": "CLAUDE.md",
+      "entities": [],
+      "content_hash": "536ab2d62a0a"
+    },
+    {
+      "key": "rule-22",
+      "kind": "rule",
+      "module": "*",
+      "stage": "rule",
+      "symptom": "The generation prompt must never contain the committed implementation (only requirements,\n",
+      "root_cause": "known pitfall in this repository",
+      "resolution": "**The generation prompt must never contain the committed implementation** (only requirements, port contract, conventions); `tests/test_generate.py` enforces it, or PROVEN means copying.",
+      "source": "CLAUDE.md",
+      "entities": [],
+      "content_hash": "7fdce773d24f"
+    },
+    {
+      "key": "20260917-233017-g711_alaw_dec-iter1",
+      "kind": "rtl",
+      "module": "g711_alaw_dec",
+      "stage": "lint",
+      "symptom": "lint: FAILED — g711_alaw_dec: %Warning-WIDTHEXPAND: /Users/kos2001/gitspace/codec-agent/build/generate/20260917-233017-g711_alaw_dec/iter1/g711_alaw_dec.sv:25:10: Operator ASSIGN expects 4 bits on the Assign RHS, but Assign RHS's SEL generates 3 bits.\nequiv: FAILED — differs from baseline: g711_alaw_dec\n%Warning-WIDTHEXPAND: /Users/kos2001/gitspace/codec-agent/build/generate/20260917-233017-g711_alaw_dec/iter1/g711_alaw_dec.sv:25:10: Operator ASSIGN expects 4 bits on the Assign RHS, but Assign RHS's SEL generates 3 bits.\n%Warning-WIDTHEXPAND: /Users/kos2001/gitspace/codec-agent/build/generate/20260917-233017-g711_alaw_dec/iter1/g711_alaw_dec.sv:33:36: Operator OR expects 16 bits on the RHS, but RHS's CONST '13'h1' generates 13 bits.\n%Warning-WIDTHTRUNC: /Users/kos2001/gitspace/codec-agent/build/generate/20260917-233017-g711_alaw_dec/iter1/g711_alaw_dec.sv:33:13: Operator ASSIGN expects 13 bits on the Assign RHS, but Assign RHS's OR generates 16 bits.\n%Error: Exiting due to 3 warning(s)",
+      "root_cause": "RTL rejected at `lint`",
+      "resolution": "-  logic [3:0]  seg;    // REQ-A-05 bits 6..4\n+  logic [2:0]  seg;    // REQ-A-05 bits 6..4 (3 bits: 0..7)\n-    if (seg == 4'd0) begin\n+    if (seg == 3'd0) begin\n-      recon = ({12'd0, step} << 1) | 13'd1;\n+      recon = ({9'd0, step} << 1) | 13'd1;\n-      recon = {7'd0, base} << (seg - 4'd1);\n+      recon = {7'd0, base} << (seg - 3'd1);",
+      "source": "runs/20260917-233017-g711_alaw_dec-generate.json",
+      "entities": [
+        "%error",
+        "%warning-widthexpand",
+        "%warning-widthtrunc",
+        "equiv",
+        "g711_alaw_dec",
+        "lint",
+        "req-a-05"
+      ],
+      "content_hash": "e05b6b75ce33"
+    },
+    {
+      "key": "20260917-233054-tb-g711_ulaw_enc-iter2",
+      "kind": "testbench",
+      "module": "g711_ulaw_enc",
+      "stage": "unsound",
+      "symptom": "stim=0000: RTL delivered got=0X; your testbench expected exp=00; the authoritative value is ff",
+      "root_cause": "testbench rejected at `unsound`",
+      "resolution": "-  //   REQ-U-06  bits6..0 = ~{segment, step}\n+  //   REQ-U-06  bits6..0 = ~{segment, step}  => positive zero -> 0xFF\n-    // REQ-IF-04: out_valid must be 0 while reset is asserted (synchronous)\n+    // REQ-IF-04: out_valid must be 0 while reset is asserted (synchronous).\n+    // Sample AFTER the edge has settled, otherwise the very first read returns\n+    // the DUT's pre-reset X value rather than the reset state.\n+      #1;\n+    #1;",
+      "source": "runs/20260917-233054-tb-g711_ulaw_enc-generate.json",
+      "entities": [
+        "out_valid",
+        "req-if-04",
+        "req-u-06",
+        "synchronous"
+      ],
+      "content_hash": "3bac8080edc8"
+    },
+    {
+      "key": "20260917-234157-g711_ulaw_enc-iter1",
+      "kind": "rtl",
+      "module": "g711_ulaw_enc",
+      "stage": "synthesize",
+      "symptom": "synthesize: FAILED — g711_ulaw_enc: REQ-IF-04 violated: asynchronous reset/set flip-flop (use always_ff @(posedge clk) with if (!rst_n))",
+      "root_cause": "RTL rejected at `synthesize`",
+      "resolution": "-  always_ff @(posedge clk or negedge rst_n) begin\n+  // REQ-IF-04: synchronous active-low reset, no reset in the sensitivity list.\n+  always_ff @(posedge clk) begin",
+      "source": "runs/20260917-234157-g711_ulaw_enc-generate.json",
+      "entities": [
+        "always_ff",
+        "asynchronous",
+        "clk",
+        "g711_ulaw_enc",
+        "negedge",
+        "posedge",
+        "req-if-04",
+        "rst_n",
+        "synchronous",
+        "synthesize"
+      ],
+      "content_hash": "620b9fb26a91"
+    },
+    {
+      "key": "20260917-234230-g711_ulaw_dec-iter1",
+      "kind": "rtl",
+      "module": "g711_ulaw_dec",
+      "stage": "synthesize",
+      "symptom": "synthesize: FAILED — g711_ulaw_dec: REQ-IF-04 violated: asynchronous reset/set flip-flop (use always_ff @(posedge clk) with if (!rst_n))",
+      "root_cause": "RTL rejected at `synthesize`",
+      "resolution": "-  always_ff @(posedge clk or negedge rst_n) begin\n+  // REQ-IF-04: synchronous active-low reset (no reset term in the sensitivity list).\n+  always_ff @(posedge clk) begin",
+      "source": "runs/20260917-234230-g711_ulaw_dec-generate.json",
+      "entities": [
+        "always_ff",
+        "asynchronous",
+        "clk",
+        "g711_ulaw_dec",
+        "negedge",
+        "posedge",
+        "req-if-04",
+        "rst_n",
+        "synchronous",
+        "synthesize"
+      ],
+      "content_hash": "f4e649fa7ee0"
+    },
+    {
+      "key": "20260917-235823-tb-g711_ulaw_dec-iter1",
+      "kind": "testbench",
+      "module": "g711_ulaw_dec",
+      "stage": "unsound",
+      "symptom": "stim=000000: RTL delivered got=8284; your testbench expected exp=0084; the authoritative value is 8284\nstim=000100: RTL delivered got=8684; your testbench expected exp=0084; the authoritative value is 8284\nstim=000200: RTL delivered got=8a84; your testbench expected exp=0084; the authoritative value is 8284\nstim=000300: RTL delivered got=8e84; your testbench expected exp=0084; the authoritative value is 8284\nstim=000400: RTL delivered got=9284; your testbench expected exp=0084; the authoritative value is 8284\nstim=000500: RTL delivered got=9684; your testbench expected exp=0084; the authoritative value is 8284\nstim=000600: RTL delivered got=9a84; your testbench expected exp=0084; the authoritative value is 8284\nstim=000700: RTL delivered got=9e84; your testbench expected exp=0084; the authoritative value is 8284",
+      "root_cause": "testbench rejected at `unsound`",
+      "resolution": "-  logic [23:0] ent;\n-  logic [23:0] exp_q [$];\n+  logic [7:0]  codel;\n+  logic [15:0] exp_q  [$];\n+  logic [7:0]  expc_q [$];\n-  // Reference model of the G.711 mu-law DECODER (REQ-U-05..U-08).\n-  // in_code[7]      : sign, 1 = positive, NOT inverted  (REQ-U-05)\n-  // in_code[6:0]    : ~{segment[2:0], step[3:0]}        (REQ-U-06)\n-  // 14-bit recon    : ((2*(16+step)+1) << seg) - 33     (REQ-U-07)\n-  // 16-bit out      : recon << 2, negated if sign == 0  (REQ-U-08)\n+  // Reference model of the G.711 mu-law DECODER.\n+  //   code[7]   : sign, 1 = positive, NOT inverted          (REQ-U-05)\n… 42 more changed lines",
+      "source": "runs/20260917-235823-tb-g711_ulaw_dec-generate.json",
+      "entities": [
+        "in_code",
+        "req-u-05",
+        "req-u-06",
+        "req-u-07",
+        "req-u-08"
+      ],
+      "content_hash": "3c29f1a0c729"
+    },
+    {
+      "key": "20260918-101619-tb-g711_ulaw_dec-iter1",
+      "kind": "testbench",
+      "module": "g711_ulaw_dec",
+      "stage": "unsound",
+      "symptom": "No `RESULT PASS|FAIL` line was printed.",
+      "root_cause": "testbench rejected at `unsound`",
+      "resolution": "-      lin   = recon << 2;                       // <= 32124, fits as positive 16-bit\n+      lin   = recon << 2;                       // <= 32124, fits as positive 15-bit\n-    stim_q.push_back(8'h00);   // positive saturation end / zero magnitude region\n-    stim_q.push_back(8'h7F);   // negative zero\n-    stim_q.push_back(8'hFF);   // positive zero\n-    stim_q.push_back(8'h80);   // +full scale, REQ-U-08\n+    stim_q.push_back(8'h00);   // negative full scale (sign bit 0)\n+    stim_q.push_back(8'h7F);   // negative zero, REQ-U-02\n+    stim_q.push_back(8'hFF);   // positive zero, REQ-U-06\n+    stim_q.push_back(8'h80);   // positive full scale, REQ-U-08\n-\n-    while (stim_q.size() > 0) begin src_v = stim_q[0]; stim_q.pop_front(); end\n… 4 more changed lines",
+      "source": "runs/20260918-101619-tb-g711_ulaw_dec-generate.json",
+      "entities": [
+        "req-u-02",
+        "req-u-06",
+        "req-u-08"
+      ],
+      "content_hash": "73dcb0574392"
+    },
+    {
+      "key": "20260918-104514-tb-g711_alaw_dec-iter1",
+      "kind": "testbench",
+      "module": "g711_alaw_dec",
+      "stage": "unsound",
+      "symptom": "stim=0000: RTL delivered got=ea80; your testbench expected exp=fff8; the authoritative value is ea80\nstim=0001: RTL delivered got=eb80; your testbench expected exp=ffe8; the authoritative value is eb80\nstim=0002: RTL delivered got=e880; your testbench expected exp=ffd8; the authoritative value is e880\nstim=0003: RTL delivered got=e980; your testbench expected exp=ffc8; the authoritative value is e980\nstim=0004: RTL delivered got=ee80; your testbench expected exp=ffb8; the authoritative value is ee80\nstim=0005: RTL delivered got=ef80; your testbench expected exp=ffa8; the authoritative value is ef80\nstim=0006: RTL delivered got=ec80; your testbench expected exp=ff98; the authoritative value is ec80\nstim=0007: RTL delivered got=ed80; your testbench expected exp=ff88; the authoritative value is ed80",
+      "root_cause": "testbench rejected at `unsound`",
+      "resolution": "+  // The line character carries even bits inverted (REQ-A-06); undo that first,\n+  // then decode segment/step/sign from the un-inverted code.\n+    logic [7:0]  c;\n-      seg = code[6:4];\n-      stp = code[3:0];\n+      c   = code ^ 8'h55;                                   // REQ-A-06 inverse (XOR 0x55)\n+      seg = c[6:4];\n+      stp = c[3:0];\n-      if (code[7]) alaw_dec_ref = $signed(mag);             // REQ-A-05: bit7 = 1 positive\n-      else         alaw_dec_ref = -$signed(mag);            // REQ-A-08: negated when sign=0\n+      if (c[7]) alaw_dec_ref = $signed(mag);                // REQ-A-05: bit7 = 1 positive\n+      else      alaw_dec_ref = -$signed(mag);               // REQ-A-08: negated when sign=0",
+      "source": "runs/20260918-104514-tb-g711_alaw_dec-generate.json",
+      "entities": [
+        "req-a-05",
+        "req-a-06",
+        "req-a-08"
+      ],
+      "content_hash": "cbaa06214c39"
+    },
+    {
+      "key": "20260918-105144-tb-g711_ulaw_enc-iter2",
+      "kind": "testbench",
+      "module": "g711_ulaw_enc",
+      "stage": "unsound",
+      "symptom": "ERROR delivered=65609 accepted=65610\nERROR delivered=65609 intended=65610",
+      "root_cause": "testbench rejected at `unsound`",
+      "resolution": "-    in_valid  = 1'b0;\n-    out_ready = 1'b1;\n+    // NOTE: in_valid/out_ready are driven only immediately after a negedge.\n+    // Changing out_ready between negedge and posedge would let the DUT consume a\n+    // held sample at the very next posedge without this bench observing it.",
+      "source": "runs/20260918-105144-tb-g711_ulaw_enc-generate.json",
+      "entities": [
+        "in_valid",
+        "negedge",
+        "out_ready",
+        "posedge"
+      ],
+      "content_hash": "19a29d8fe9e2"
+    }
+  ]
+}

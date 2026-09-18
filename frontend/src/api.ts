@@ -1,5 +1,5 @@
 import type {
-  DocFile, GateTestInfo, GenerateRun, TbRun, WaveCapture, Waveform, GenerateRunSummary, Health, Job, ModuleInfo, MutationRun, Proof,
+  DocFile, GateTestInfo, ImproveReport, ImproveRound, KbHit, KbStats, GenerateRun, TbRun, WaveCapture, Waveform, GenerateRunSummary, Health, Job, ModuleInfo, MutationRun, Proof,
   Requirements, TestRun,
 } from './types'
 
@@ -48,6 +48,11 @@ export const api = {
   generateRuns: () => request<GenerateRunSummary[]>('/generate/runs'),
   generateRun: (file: string) => request<GenerateRun | TbRun>(`/generate/runs/${encodeURIComponent(file)}`),
   candidate: (path: string) => request<{ path: string; source: string }>(`/candidate?path=${encodeURIComponent(path)}`),
+
+  improveReport: () => request<ImproveReport>('/improve/report'),
+  improveAct: (action: string) => post<Job<ImproveRound>>('/improve/act', { action }),
+  kbStats: () => request<KbStats>('/kb/stats'),
+  kbSearch: (q: string, k = 3) => request<{ query: string; hits: KbHit[] }>(`/kb/search?q=${encodeURIComponent(q)}&k=${k}`),
 
   waveTests: () => request<GateTestInfo[]>('/waves/tests'),
   waveCaptures: () => request<WaveCapture[]>('/waves/captures'),
