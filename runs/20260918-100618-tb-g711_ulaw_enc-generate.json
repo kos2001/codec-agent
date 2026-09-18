@@ -1,0 +1,20 @@
+{
+  "run_id": "20260918-100618-tb-g711_ulaw_enc",
+  "module": "g711_ulaw_enc",
+  "kind": "testbench",
+  "outcome": "ERRORED",
+  "iterations": 1,
+  "max_iters": 3,
+  "min_kill_pct": 90.0,
+  "model": "deepseek/deepseek-v4.1-flash",
+  "server": "http://127.0.0.1:8659",
+  "testbench": null,
+  "kill_pct": null,
+  "attempts": [
+    {
+      "iteration": 1,
+      "error": "Hermes API server unreachable at http://127.0.0.1:8659: timed out"
+    }
+  ],
+  "note": "A sound testbench agrees with RTL proven against ITU-T STL; kill rate is its detection power over the module's mutants. The gate's own testbench kills 100%."
+}

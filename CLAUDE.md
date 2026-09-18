@@ -122,6 +122,9 @@ scripts/workbench.sh                   # http://127.0.0.1:8013
   `timescale; a 10 ns assumption produced an empty trace. `wave_dump` is a separate root
   (`iverilog -s <tb> -s wave_dump`) so no testbench is ever edited to get a waveform.
 - **Parse the field you mean.** `t=(\d+)` matched the `t=` inside `got=0001`; anchor trailing fields.
+- **Long generations need a long client timeout.** With the strengthened testbench contract
+  deepseek took 13 minutes for one reply; `HERMES_TIMEOUT` (repo `.env`, default 600 s) is the
+  limit, and a timeout is reported as `ERRORED`, not as a bad testbench.
 - **The generation prompt must never contain the committed implementation** (only requirements,
   port contract, conventions); `tests/test_generate.py` enforces it, or PROVEN means copying.
 

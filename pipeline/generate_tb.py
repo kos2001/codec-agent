@@ -14,8 +14,9 @@ The model is given the requirements and the port contract only: no expected vect
 no committed RTL, no STL output. Its reference model is therefore independent.
 
 Outcomes:
-  ACCEPTED    sound, and kill rate >= --min-kill (default 90%)
-  WEAK        sound, but kills fewer mutants than required
+  ACCEPTED    sound, kill rate >= --min-kill (default 90%), and no blind fault class
+  WEAK        sound, but too few mutants killed or blind to a required fault class
+              (repaired with behavioural hints — never with the RTL)
   EXHAUSTED   never became sound within the iteration budget
   ERRORED     Hermes API failure
 
@@ -78,8 +79,15 @@ TESTBENCH CONTRACT (a tool runs it with `iverilog -g2012` and parses the log):
 - Keep a queue of expected outputs; compare every delivered output in order.
 - Cover: {'every one of the 256 codes' if not enc else 'all 65536 16-bit inputs (exhaustive sweep -32768..32767)'},
   plus segment boundaries, saturation, zero and sign handling.
-- Also check: out_valid is 0 after reset; data stays stable while out_valid && !out_ready;
-  no output is lost, duplicated or invented (count delivered == count accepted).
+- Also check, and FAIL when violated (each of these has slipped past a generated testbench):
+  * out_valid is 0 after reset, and reset dominates a hostile environment (drive in_valid=1,
+    out_ready=0 during reset);
+  * data stays stable while out_valid && !out_ready;
+  * count delivered == count accepted == the number of stimuli you intended to apply — a DUT
+    that never asserts in_ready, or drops every sample, must FAIL and must not hang silently;
+  * REQ-IF-04 is a SYNCHRONOUS reset: with a held output (out_ready=0), drop rst_n between two
+    clock edges and require out_valid to stay 1 until the next posedge, then be 0 after it.
+    An asynchronous reset clears it immediately and every edge-sampled check misses that.
 - On each mismatch print exactly: ERROR stim=%h got=%h exp=%h   (hex, stim zero-extended to 16 bits)
 - At the end print exactly one line: RESULT PASS checks=%0d   or   RESULT FAIL checks=%0d errors=%0d
   then call $finish. Include a watchdog that prints RESULT FAIL and finishes if the run hangs.
@@ -108,6 +116,22 @@ Your testbench:
 {previous}
 ```
 Fix the testbench so it agrees with the authoritative values above. Change nothing else."""
+
+
+def build_weak_prompt(module: str, previous: str, evidence: str) -> str:
+    return f"""{build_prompt(module)}
+
+YOUR TESTBENCH (below) AGREES WITH A CORRECT DUT, BUT IT DOES NOT CATCH BROKEN ONES.
+Each broken DUT below is a single-fault version of the design that your testbench passed:
+```
+{evidence}
+```
+
+Your testbench:
+```systemverilog
+{previous}
+```
+Strengthen it so those faults fail, without weakening anything it already checks."""
 
 
 def extract_tb(reply: str, module: str) -> Optional[str]:
@@ -182,6 +206,26 @@ def soundness_evidence(module: str, run: dict) -> str:
     return "\n".join(lines) or run["log"][-800:]
 
 
+#: Fault classes a testbench must be able to see, whatever the overall percentage says.
+#: (`reset-style` is here because three generated testbenches missed exactly it.)
+REQUIRED_CLASSES = ("stuck-at", "dropped-update", "reset-style", "constant", "slice-shift")
+
+#: What a surviving class means in behavioural terms — the repair prompt may not carry RTL.
+CLASS_HINT = {
+    "stuck-at": "a DUT that ties a handshake signal to a constant (e.g. never asserts in_ready, or "
+                "holds out_valid high) still passes your testbench: check that the number of samples "
+                "accepted and delivered equals the number you applied, and fail (do not hang) otherwise",
+    "dropped-update": "a DUT that never updates a register still passes: make sure every applied "
+                      "stimulus is compared, including the first and the last one",
+    "reset-style": "a DUT with an asynchronous reset still passes: add the mid-cycle reset check "
+                   "described in the contract",
+    "constant": "a DUT with a wrong constant (bias, saturation limit, inversion mask) still passes: "
+                "cover segment boundaries, saturation and both zero codes",
+    "slice-shift": "a DUT that reads the wrong bit field still passes: sweep the whole input range, "
+                   "not a sample of it",
+}
+
+
 def kill_rate(tb: Path, module: str, work: Path, jobs: int = 8) -> dict:
     """Simulate the testbench against every mutant of `module` (dedup'd, excluding mutants
     that do not compile standalone — those are lint/synthesis catches, not TB catches)."""
@@ -207,8 +251,15 @@ def kill_rate(tb: Path, module: str, work: Path, jobs: int = 8) -> dict:
         rows = list(ex.map(one, muts))
     considered = [r for r in rows if r["status"] != "not-compilable"]
     killed = sum(r["status"] == "killed" for r in considered)
+    by_class: Dict[str, Dict[str, int]] = {}
+    for r in considered:
+        c = by_class.setdefault(r["operator"], {"killed": 0, "survived": 0})
+        c["killed" if r["status"] == "killed" else "survived"] += 1
+    missed = sorted(c for c in REQUIRED_CLASSES
+                    if by_class.get(c, {}).get("survived", 0) and not by_class[c]["killed"])
     return {"mutants": len(rows), "considered": len(considered), "killed": killed,
             "kill_pct": round(100 * killed / len(considered), 1) if considered else None,
+            "by_class": by_class, "blind_classes": missed,
             "survivors": [r for r in considered if r["status"] == "survived"], "rows": rows}
 
 
@@ -219,11 +270,31 @@ def check(tb: Path, module: str, work: Path, min_kill: float) -> dict:
     if ok:
         k = kill_rate(tb, module, work / "mutants")
         out["kill"] = {x: y for x, y in k.items() if x != "rows"}
-        out["verdict"] = "ACCEPTED" if (k["kill_pct"] or 0) >= min_kill else "WEAK"
+        # Both gates matter: the percentage, and being able to see each required fault class.
+        # A testbench can score 95% while being blind to every protocol fault.
+        strong = (k["kill_pct"] or 0) >= min_kill and not k["blind_classes"]
+        out["verdict"] = "ACCEPTED" if strong else "WEAK"
+        if not strong:
+            out["evidence"] = weakness_evidence(k, min_kill)
     else:
         out["verdict"] = "UNSOUND"
         out["evidence"] = soundness_evidence(module, sound)
     return out
+
+
+def weakness_evidence(k: dict, min_kill: float) -> str:
+    """Behavioural description of what the testbench cannot see. Never RTL: the testbench is
+    written against the requirements, and handing it the implementation would defeat that."""
+    lines = [f"Your testbench is sound but not sensitive enough: it caught {k['killed']}/{k['considered']} "
+             f"deliberately broken versions of the DUT ({k['kill_pct']}%, required {min_kill}%)."]
+    for c in k["blind_classes"]:
+        lines.append(f"- it cannot see this class of fault at all: {CLASS_HINT.get(c, c)}")
+    for c, v in sorted(k["by_class"].items()):
+        if v["survived"] and c not in k["blind_classes"]:
+            lines.append(f"- {v['survived']} of {v['survived'] + v['killed']} `{c}` faults survive: "
+                         f"{CLASS_HINT.get(c, 'strengthen the corresponding check')}")
+    lines.append("Keep every check that already passes; add the missing ones.")
+    return "\n".join(lines)
 
 
 def run(module: str, *, max_iters: int = 3, min_kill: float = 90.0,
@@ -257,16 +328,23 @@ def run(module: str, *, max_iters: int = 3, min_kill: float = 90.0,
         res = check(tb, module, d, min_kill)
         rec.update(testbench=str(tb.relative_to(gate.ROOT)), check_elapsed_s=round(time.time() - t0, 1), **res)
         attempts.append(rec)
-        if res["verdict"] in ("ACCEPTED", "WEAK"):
-            outcome, accepted = res["verdict"], rec
+        if res["verdict"] == "ACCEPTED":
+            outcome, accepted = "ACCEPTED", rec
             break
-        prompt = build_repair_prompt(module, code, res["evidence"], i)
+        # WEAK is also repairable: it is sound, so the feedback is about detection power.
+        # Only a judged testbench (with a kill report) can be the run's result.
+        outcome = res["verdict"]
+        if res["verdict"] == "WEAK":
+            accepted = rec
+        prompt = (build_weak_prompt(module, code, res["evidence"]) if res["verdict"] == "WEAK"
+                  else build_repair_prompt(module, code, res["evidence"], i))
 
     result = {"run_id": run_id, "module": module, "kind": "testbench", "outcome": outcome,
               "iterations": len(attempts), "max_iters": max_iters, "min_kill_pct": min_kill,
               "model": upstream_model() or client.s.model, "server": client.s.base_url,
               "testbench": accepted["testbench"] if accepted else None,
-              "kill_pct": accepted["kill"]["kill_pct"] if accepted else None,
+              "kill_pct": (accepted.get("kill") or {}).get("kill_pct") if accepted else None,
+              "blind_classes": (accepted.get("kill") or {}).get("blind_classes") if accepted else None,
               "attempts": attempts,
               "note": "A sound testbench agrees with RTL proven against ITU-T STL; kill rate is its "
                       "detection power over the module's mutants. The gate's own testbench kills 100%."}
