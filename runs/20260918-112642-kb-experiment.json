@@ -1,0 +1,166 @@
+{
+  "model": "deepseek/deepseek-v4.1-flash",
+  "fixtures": 3,
+  "repeats": 1,
+  "summary": {
+    "nokb": {
+      "n": 3,
+      "repaired": 3,
+      "rate": 1.0,
+      "with_citations": 0
+    },
+    "kb": {
+      "n": 3,
+      "repaired": 3,
+      "rate": 1.0,
+      "with_citations": 3
+    }
+  },
+  "rows": [
+    {
+      "arm": "nokb",
+      "id": "20260917-233017-g711_alaw_dec-iter1",
+      "kind": "rtl",
+      "module": "g711_alaw_dec",
+      "stage": "lint",
+      "repaired": true,
+      "detail": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "pass",
+        "formal": "pass"
+      },
+      "citations": [],
+      "llm_s": 119.0,
+      "usage": {
+        "prompt_tokens": 8223,
+        "completion_tokens": 6119,
+        "total_tokens": 14342
+      },
+      "repeat": 0
+    },
+    {
+      "arm": "kb",
+      "id": "20260917-233017-g711_alaw_dec-iter1",
+      "kind": "rtl",
+      "module": "g711_alaw_dec",
+      "stage": "lint",
+      "repaired": true,
+      "detail": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "pass",
+        "formal": "pass"
+      },
+      "citations": [
+        "rule-14",
+        "rule-16",
+        "rule-5"
+      ],
+      "llm_s": 81.9,
+      "usage": {
+        "prompt_tokens": 8611,
+        "completion_tokens": 4910,
+        "total_tokens": 13521
+      },
+      "repeat": 0
+    },
+    {
+      "arm": "nokb",
+      "id": "20260917-234157-g711_ulaw_enc-iter1",
+      "kind": "rtl",
+      "module": "g711_ulaw_enc",
+      "stage": "synthesize",
+      "repaired": true,
+      "detail": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "pass",
+        "formal": "pass"
+      },
+      "citations": [],
+      "llm_s": 37.7,
+      "usage": {
+        "prompt_tokens": 8416,
+        "completion_tokens": 2506,
+        "total_tokens": 10922
+      },
+      "repeat": 0
+    },
+    {
+      "arm": "kb",
+      "id": "20260917-234157-g711_ulaw_enc-iter1",
+      "kind": "rtl",
+      "module": "g711_ulaw_enc",
+      "stage": "synthesize",
+      "repaired": true,
+      "detail": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "pass",
+        "formal": "pass"
+      },
+      "citations": [
+        "20260917-234230-g711_ulaw_dec-iter1",
+        "rule-16",
+        "rule-4"
+      ],
+      "llm_s": 17.2,
+      "usage": {
+        "prompt_tokens": 8935,
+        "completion_tokens": 1374,
+        "total_tokens": 10309
+      },
+      "repeat": 0
+    },
+    {
+      "arm": "nokb",
+      "id": "20260917-234230-g711_ulaw_dec-iter1",
+      "kind": "rtl",
+      "module": "g711_ulaw_dec",
+      "stage": "synthesize",
+      "repaired": true,
+      "detail": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "pass",
+        "formal": "pass"
+      },
+      "citations": [],
+      "llm_s": 35.5,
+      "usage": {
+        "prompt_tokens": 8098,
+        "completion_tokens": 894,
+        "total_tokens": 8992
+      },
+      "repeat": 0
+    },
+    {
+      "arm": "kb",
+      "id": "20260917-234230-g711_ulaw_dec-iter1",
+      "kind": "rtl",
+      "module": "g711_ulaw_dec",
+      "stage": "synthesize",
+      "repaired": true,
+      "detail": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "pass",
+        "formal": "pass"
+      },
+      "citations": [
+        "20260917-234157-g711_ulaw_enc-iter1",
+        "rule-16",
+        "rule-4"
+      ],
+      "llm_s": 11.2,
+      "usage": {
+        "prompt_tokens": 8620,
+        "completion_tokens": 940,
+        "total_tokens": 9560
+      },
+      "repeat": 0
+    }
+  ],
+  "note": "Each fixture's own run is excluded from the KB, so any hit comes from a different failure. Judged by gate.prove / generate_tb.check, not by the model."
+}

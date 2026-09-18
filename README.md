@@ -27,6 +27,12 @@ spec (G.711 PDF) ─► requirements.yaml ─► RTL
 | Hermes-generated RTL | all 4 modules PROVEN (deepseek-v4.1-flash; 1–2 iterations with gate evidence) |
 | Hermes-generated testbenches | all 4 ACCEPTED: sound on PROVEN RTL, **100% mutant kill**, no blind fault class |
 
+Also in the loop: a **knowledge base** of past failures with the edit that fixed them
+(`pipeline/kb.py`, mined from `runs/`), an A/B experiment that measures whether it actually helps
+(`pipeline/kb_experiment.py` — so far: no measurable benefit, 6/9 either way), and a
+**self-improvement loop** (`pipeline/improve.py`) that measures, ranks what evidence is missing,
+acts, re-measures and refuses to call a round an improvement when a metric got worse.
+
 Reports: [`claudedocs/phase0-report.md`](claudedocs/phase0-report.md) ·
 plan: [`claudedocs/spec-to-rtl-service-plan.md`](claudedocs/spec-to-rtl-service-plan.md) ·
 working notes and hard-won rules: [`CLAUDE.md`](CLAUDE.md)

@@ -37,6 +37,8 @@ sys.path.insert(0, str(ROOT / "pipeline"))
 import gate  # noqa: E402
 import generate as gen  # noqa: E402
 import generate_tb  # noqa: E402
+import improve as improve_mod  # noqa: E402
+import kb as kb_mod  # noqa: E402
 import waves  # noqa: E402
 from hermes_client import HermesClient, upstream_model  # noqa: E402
 
@@ -307,6 +309,60 @@ def candidate(path: str) -> dict:
     except HTTPException:
         p = _safe_under(ROOT / "build" / "generate_tb", path)
     return {"path": path, "source": p.read_text()}
+
+
+# --------------------------------------------------------- self-improvement ---
+
+@app.get("/improve/report")
+def improve_report() -> dict:
+    snap = improve_mod.snapshot()
+    recs = improve_mod.recommend(snap)
+    hist = json.loads(improve_mod.HISTORY.read_text())["rounds"] if improve_mod.HISTORY.exists() else []
+    return {"snapshot": snap, "metrics": improve_mod.key_metrics(snap), "recommendations": recs,
+            "history": [{k: h.get(k) for k in ("round", "at", "recommendation", "metrics_after", "delta")}
+                        for h in hist[-10:]]}
+
+
+class ImproveActReq(BaseModel):
+    action: str
+
+
+@app.post("/improve/act")
+def improve_act(req: ImproveActReq) -> dict:
+    name = req.action.partition(":")[0]
+    if name not in improve_mod.ACTIONS:
+        raise HTTPException(400, f"unknown action {name}")
+    return _start_job("improve", req.model_dump(), lambda: _act_and_measure(req.action))
+
+
+def _act_and_measure(action: str) -> dict:
+    """Run one action, then re-measure and apply the regression gate (L2)."""
+    before = improve_mod.snapshot()
+    result = improve_mod.act(action)
+    after = improve_mod.snapshot()
+    rec = {"at": time.strftime("%Y-%m-%dT%H:%M:%S"), "recommendation": {"id": "manual", "action": action},
+           "result": result, "metrics_before": improve_mod.key_metrics(before),
+           "metrics_after": improve_mod.key_metrics(after),
+           "delta": improve_mod.regression(before, after), "round": 0}
+    improve_mod._record(rec)
+    return rec
+
+
+@app.get("/kb/search")
+def kb_search(q: str, k: int = 3) -> dict:
+    hits = kb_mod.KB().search(q, k=k)
+    return {"query": q, "hits": [{"key": h.case.key, "kind": h.case.kind, "module": h.case.module,
+                                  "stage": h.case.stage, "bm25": h.bm25, "overlap": h.overlap,
+                                  "symptom": h.case.symptom[:400], "resolution": h.case.resolution[:600],
+                                  "source": h.case.source} for h in hits]}
+
+
+@app.get("/kb/stats")
+def kb_stats() -> dict:
+    cases = kb_mod.load()
+    from collections import Counter
+    return {"cases": len(cases), "by_kind": dict(Counter(c.kind for c in cases)),
+            "by_stage": dict(Counter(c.stage for c in cases)), "eval": kb_mod.evaluate()}
 
 
 # ---------------------------------------------------------------- waveforms ---
