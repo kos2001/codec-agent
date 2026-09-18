@@ -47,11 +47,13 @@ module tb_g711;
   endgenerate
 
   int sent = 0, got = 0, errors = 0, seed, cycles = 0;
+  // While set, the stream drivers stand down so the directed reset phase owns the inputs.
+  bit post_phase = 1'b0;
 
   always @(posedge clk) if (rst_n && got < N) cycles <= cycles + 1;
 
   // Driver: data must stay stable while valid && !ready
-  always @(posedge clk) begin
+  always @(posedge clk) if (!post_phase) begin
     if (!rst_n) begin
       in_valid <= 1'b1;  // garbage upstream during reset: reset must dominate
     end else begin
@@ -68,7 +70,7 @@ module tb_g711;
   end
 
   // Sink with random backpressure + scoreboard
-  always @(posedge clk) begin
+  always @(posedge clk) if (!post_phase) begin
     out_ready <= !rst_n ? 1'b0 : (BP == 0) ? 1'b1 : ($urandom % 3 != 0);  // stalled during reset
     if (rst_n && out_valid && out_ready) begin
       if (got >= N) begin
@@ -102,6 +104,35 @@ module tb_g711;
       begin repeat (N * 20 + 1000) @(posedge clk); $display("ERROR timeout sent=%0d got=%0d", sent, got); end
     join_any
     repeat (5) @(posedge clk);  // catch duplicated outputs
+
+    // REQ-IF-04 is a SYNCHRONOUS reset: dropping rst_n between clock edges must change
+    // nothing until the next posedge. An asynchronous reset clears out_valid immediately,
+    // which every edge-sampled check (this scoreboard, and the formal properties) misses.
+    post_phase = 1'b1;
+    @(negedge clk);
+    in_valid = 1'b1; in_data = stim[0]; out_ready = 1'b0;
+    @(posedge clk); #1;
+    in_valid = 1'b0;
+    // Wait for the held output: one stage in the single-module modes, two when the
+    // round-trip modes chain an encoder into a decoder.
+    for (int w = 0; w < 8 && out_valid !== 1'b1; w++) @(posedge clk);
+    @(negedge clk); #1;
+    if (out_valid !== 1'b1) begin
+      $display("ERROR pre-reset out_valid=%b (expected a held output) t=%0t", out_valid, $time);
+      errors = errors + 1;
+    end else begin
+      rst_n = 1'b0; #1;
+      if (out_valid !== 1'b1) begin
+        $display("ERROR asynchronous reset: out_valid dropped between clock edges (REQ-IF-04) t=%0t", $time);
+        errors = errors + 1;
+      end
+      @(posedge clk); #1;
+      if (out_valid !== 1'b0) begin
+        $display("ERROR reset not applied at the clock edge: out_valid=%b t=%0t", out_valid, $time);
+        errors = errors + 1;
+      end
+      rst_n = 1'b1;
+    end
     if (BP == 0 && cycles > N + 3) begin
       $display("ERROR throughput cycles=%0d for n=%0d (limit %0d)", cycles, N, N + 3); errors = errors + 1;
     end

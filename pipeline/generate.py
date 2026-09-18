@@ -89,7 +89,9 @@ PORT CONTRACT (exact names, widths and directions; do not add or remove ports):
 {port_contract(module)}
 ```
 
-Interface behaviour: in_ready = ~out_valid | out_ready. On a clock edge with rst_n low,
+Interface behaviour: in_ready = ~out_valid | out_ready. The reset is SYNCHRONOUS (REQ-IF-04):
+`always_ff @(posedge clk)` with `if (!rst_n) out_valid <= 1'b0;` — never
+`@(posedge clk or negedge rst_n)`, which the gate rejects at synthesis. On a clock edge with rst_n low,
 out_valid <= 0. Otherwise when in_ready: out_valid <= in_valid, and if in_valid the output
 register takes the value computed from the input. Latency is one cycle.
 
