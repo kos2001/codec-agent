@@ -1,0 +1,313 @@
+{
+  "run_id": "20260917-234503-tb-g711_alaw_enc",
+  "module": "g711_alaw_enc",
+  "kind": "testbench",
+  "outcome": "EXHAUSTED",
+  "iterations": 3,
+  "max_iters": 3,
+  "min_kill_pct": 90.0,
+  "model": "deepseek/deepseek-v4.1-flash",
+  "server": "http://127.0.0.1:8659",
+  "testbench": null,
+  "kill_pct": null,
+  "attempts": [
+    {
+      "iteration": 1,
+      "usage": {
+        "prompt_tokens": 7371,
+        "completion_tokens": 21416,
+        "total_tokens": 28787
+      },
+      "llm_elapsed_s": 83.8,
+      "testbench": "build/generate_tb/20260917-234503-tb-g711_alaw_enc/iter1/tb_g711_alaw_enc.sv",
+      "check_elapsed_s": 0.0,
+      "sound": false,
+      "soundness": {
+        "compiled": true,
+        "timeout": false,
+        "result": "FAIL",
+        "checks": 3403,
+        "errors": [
+          [
+            "0000",
+            "002a",
+            "0000"
+          ],
+          [
+            "0000",
+            "002a",
+            "0000"
+          ],
+          [
+            "0000",
+            "002a",
+            "0000"
+          ],
+          [
+            "83b4",
+            "002b",
+            "002a"
+          ],
+          [
+            "83b5",
+            "002b",
+            "002a"
+          ],
+          [
+            "83b6",
+            "002b",
+            "002a"
+          ],
+          [
+            "83b7",
+            "002b",
+            "002a"
+          ],
+          [
+            "83b8",
+            "002b",
+            "002a"
+          ],
+          [
+            "83b9",
+            "002b",
+            "002a"
+          ],
+          [
+            "83ba",
+            "002b",
+            "002a"
+          ],
+          [
+            "83bb",
+            "002b",
+            "002a"
+          ],
+          [
+            "83bc",
+            "002b",
+            "002a"
+          ],
+          [
+            "83bd",
+            "002b",
+            "002a"
+          ],
+          [
+            "83be",
+            "002b",
+            "002a"
+          ],
+          [
+            "83bf",
+            "002b",
+            "002a"
+          ],
+          [
+            "83c0",
+            "002b",
+            "002a"
+          ],
+          [
+            "83c1",
+            "002b",
+            "002a"
+          ],
+          [
+            "83c2",
+            "002b",
+            "002a"
+          ],
+          [
+            "83c3",
+            "002b",
+            "002a"
+          ],
+          [
+            "83c4",
+            "002b",
+            "002a"
+          ],
+          [
+            "0000",
+            "041a",
+            "0000"
+          ],
+          [
+            "0000",
+            "03c8",
+            "0000"
+          ]
+        ],
+        "other_errors": []
+      },
+      "log_tail": "b exp=002a\nERROR stim=83bb got=002b exp=002a\nERROR stim=83bc got=002b exp=002a\nERROR stim=83bd got=002b exp=002a\nERROR stim=83be got=002b exp=002a\nERROR stim=83bf got=002b exp=002a\nERROR stim=83c0 got=002b exp=002a\nERROR stim=83c1 got=002b exp=002a\nERROR stim=83c2 got=002b exp=002a\nERROR stim=83c3 got=002b exp=002a\nERROR stim=83c4 got=002b exp=002a\nERROR stim=0000 got=041a exp=0000\nERROR stim=0000 got=03c8 exp=0000\nRESULT FAIL checks=3403 errors=22\n/Users/kos2001/gitspace/codec-agent/build/generate_tb/20260917-234503-tb-g711_alaw_enc/iter1/tb_g711_alaw_enc.sv:288: $finish called at 33835 (1s)\n",
+      "verdict": "UNSOUND",
+      "evidence": "stim=0000: RTL delivered got=002a; your testbench expected exp=0000; the authoritative value is d5\nstim=0000: RTL delivered got=002a; your testbench expected exp=0000; the authoritative value is d5\nstim=0000: RTL delivered got=002a; your testbench expected exp=0000; the authoritative value is d5\nstim=83b4: RTL delivered got=002b; your testbench expected exp=002a; the authoritative value is 2a\nstim=83b5: RTL delivered got=002b; your testbench expected exp=002a; the authoritative value is 2a\nstim=83b6: RTL delivered got=002b; your testbench expected exp=002a; the authoritative value is 2a\nstim=83b7: RTL delivered got=002b; your testbench expected exp=002a; the authoritative value is 2a\nstim=83b8: RTL delivered got=002b; your testbench expected exp=002a; the authoritative value is 2a"
+    },
+    {
+      "iteration": 2,
+      "usage": {
+        "prompt_tokens": 11042,
+        "completion_tokens": 20218,
+        "total_tokens": 31260
+      },
+      "llm_elapsed_s": 81.9,
+      "testbench": "build/generate_tb/20260917-234503-tb-g711_alaw_enc/iter2/tb_g711_alaw_enc.sv",
+      "check_elapsed_s": 0.7,
+      "sound": false,
+      "soundness": {
+        "compiled": true,
+        "timeout": false,
+        "result": "FAIL",
+        "checks": 240047,
+        "errors": [
+          [
+            "0000",
+            "00d5",
+            "0000"
+          ]
+        ],
+        "other_errors": []
+      },
+      "log_tail": "ERROR stim=0000 got=00d5 exp=0000\nRESULT FAIL checks=240047 errors=1\n/Users/kos2001/gitspace/codec-agent/build/generate_tb/20260917-234503-tb-g711_alaw_enc/iter2/tb_g711_alaw_enc.sv:283: $finish called at 2401465 (1s)\n",
+      "verdict": "UNSOUND",
+      "evidence": "stim=0000: RTL delivered got=00d5; your testbench expected exp=0000; the authoritative value is d5"
+    },
+    {
+      "iteration": 3,
+      "usage": {
+        "prompt_tokens": 10836,
+        "completion_tokens": 52070,
+        "total_tokens": 62906
+      },
+      "llm_elapsed_s": 236.0,
+      "testbench": "build/generate_tb/20260917-234503-tb-g711_alaw_enc/iter3/tb_g711_alaw_enc.sv",
+      "check_elapsed_s": 0.3,
+      "sound": false,
+      "soundness": {
+        "compiled": true,
+        "timeout": false,
+        "result": "FAIL",
+        "checks": 65554,
+        "errors": [
+          [
+            "8000",
+            "00d5",
+            "002a"
+          ],
+          [
+            "8400",
+            "002a",
+            "002b"
+          ],
+          [
+            "8800",
+            "002b",
+            "0028"
+          ],
+          [
+            "8c00",
+            "0028",
+            "0029"
+          ],
+          [
+            "9000",
+            "0029",
+            "002e"
+          ],
+          [
+            "9400",
+            "002e",
+            "002f"
+          ],
+          [
+            "9800",
+            "002f",
+            "002c"
+          ],
+          [
+            "9c00",
+            "002c",
+            "002d"
+          ],
+          [
+            "a000",
+            "002d",
+            "0022"
+          ],
+          [
+            "a400",
+            "0022",
+            "0023"
+          ],
+          [
+            "a800",
+            "0023",
+            "0020"
+          ],
+          [
+            "ac00",
+            "0020",
+            "0021"
+          ],
+          [
+            "b000",
+            "0021",
+            "0026"
+          ],
+          [
+            "b400",
+            "0026",
+            "0027"
+          ],
+          [
+            "b800",
+            "0027",
+            "0024"
+          ],
+          [
+            "bc00",
+            "0024",
+            "0025"
+          ],
+          [
+            "c000",
+            "0025",
+            "003a"
+          ],
+          [
+            "c200",
+            "003a",
+            "003b"
+          ],
+          [
+            "c400",
+            "003b",
+            "0038"
+          ],
+          [
+            "c600",
+            "0038",
+            "0039"
+          ],
+          [
+            "0000",
+            "4601",
+            "0000"
+          ],
+          [
+            "0000",
+            "4601",
+            "0000"
+          ]
+        ],
+        "other_errors": []
+      },
+      "log_tail": "exp=0023\nERROR stim=a800 got=0023 exp=0020\nERROR stim=ac00 got=0020 exp=0021\nERROR stim=b000 got=0021 exp=0026\nERROR stim=b400 got=0026 exp=0027\nERROR stim=b800 got=0027 exp=0024\nERROR stim=bc00 got=0024 exp=0025\nERROR stim=c000 got=0025 exp=003a\nERROR stim=c200 got=003a exp=003b\nERROR stim=c400 got=003b exp=0038\nERROR stim=c600 got=0038 exp=0039\nERROR stim=0000 got=4601 exp=0000\nERROR stim=0000 got=4601 exp=0000\nRESULT FAIL checks=65554 errors=22\n/Users/kos2001/gitspace/codec-agent/build/generate_tb/20260917-234503-tb-g711_alaw_enc/iter3/tb_g711_alaw_enc.sv:288: $finish called at 656625 (1s)\n",
+      "verdict": "UNSOUND",
+      "evidence": "stim=8000: RTL delivered got=00d5; your testbench expected exp=002a; the authoritative value is 2a\nstim=8400: RTL delivered got=002a; your testbench expected exp=002b; the authoritative value is 2b\nstim=8800: RTL delivered got=002b; your testbench expected exp=0028; the authoritative value is 28\nstim=8c00: RTL delivered got=0028; your testbench expected exp=0029; the authoritative value is 29\nstim=9000: RTL delivered got=0029; your testbench expected exp=002e; the authoritative value is 2e\nstim=9400: RTL delivered got=002e; your testbench expected exp=002f; the authoritative value is 2f\nstim=9800: RTL delivered got=002f; your testbench expected exp=002c; the authoritative value is 2c\nstim=9c00: RTL delivered got=002c; your testbench expected exp=002d; the authoritative value is 2d"
+    }
+  ],
+  "note": "A sound testbench agrees with RTL proven against ITU-T STL; kill rate is its detection power over the module's mutants. The gate's own testbench kills 100%."
+}

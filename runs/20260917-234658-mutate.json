@@ -1,0 +1,4678 @@
+{
+  "total": 181,
+  "equivalent": 1,
+  "caught": 180,
+  "survived": 0,
+  "score_pct": 100.0,
+  "caught_by_stage": {
+    "lint": 44,
+    "synthesize": 6,
+    "simulate": 176,
+    "formal": 176
+  },
+  "caught_only_by_stage": {
+    "lint": 0,
+    "synthesize": 4,
+    "simulate": 0,
+    "formal": 0
+  },
+  "by_operator": {
+    "arithmetic": {
+      "caught": 5,
+      "survived": 0,
+      "equivalent": 0
+    },
+    "boolean": {
+      "caught": 7,
+      "survived": 0,
+      "equivalent": 0
+    },
+    "constant": {
+      "caught": 74,
+      "survived": 0,
+      "equivalent": 1
+    },
+    "dropped-update": {
+      "caught": 12,
+      "survived": 0,
+      "equivalent": 0
+    },
+    "inversion": {
+      "caught": 16,
+      "survived": 0,
+      "equivalent": 0
+    },
+    "mux-swap": {
+      "caught": 5,
+      "survived": 0,
+      "equivalent": 0
+    },
+    "relational": {
+      "caught": 1,
+      "survived": 0,
+      "equivalent": 0
+    },
+    "reset-style": {
+      "caught": 4,
+      "survived": 0,
+      "equivalent": 0
+    },
+    "slice-shift": {
+      "caught": 48,
+      "survived": 0,
+      "equivalent": 0
+    },
+    "stuck-at": {
+      "caught": 8,
+      "survived": 0,
+      "equivalent": 0
+    }
+  },
+  "elapsed_s": 215.2,
+  "survivors": [],
+  "results": [
+    {
+      "id": "arithmetic-25-56",
+      "module": "g711_alaw_dec",
+      "operator": "arithmetic",
+      "description": "turned + into -",
+      "line": 25,
+      "before": "mag = {10'd0, 1'b1, c[3:0], 1'b1} << ({1'b0, seg} + 4'd2);",
+      "after": "mag = {10'd0, 1'b1, c[3:0], 1'b1} << ({1'b0, seg} - 4'd2);",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_alaw_dec FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "arithmetic-26-29",
+      "module": "g711_alaw_dec",
+      "operator": "arithmetic",
+      "description": "turned + into -",
+      "line": 26,
+      "before": "pcm = c[7] ? mag : (~mag + 16'd1);",
+      "after": "pcm = c[7] ? mag : (~mag - 16'd1);",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_alaw_dec FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "boolean-19-18",
+      "module": "g711_alaw_dec",
+      "operator": "boolean",
+      "description": "turned ^ into |",
+      "line": 19,
+      "before": "c   = in_code ^ 8'h55;",
+      "after": "c   = in_code | 8'h55;",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_alaw_dec FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "boolean-29-31",
+      "module": "g711_alaw_dec",
+      "operator": "boolean",
+      "description": "turned | into &",
+      "line": 29,
+      "before": "assign in_ready = ~out_valid | out_ready;",
+      "after": "assign in_ready = ~out_valid & out_ready;",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_alaw_dec FAIL [A3_no_false_backpress]; cover_alaw_dec FAIL [C2_push_while_pop]"
+      }
+    },
+    {
+      "id": "const-19-20+",
+      "module": "g711_alaw_dec",
+      "operator": "constant",
+      "description": "changed 8'h55 to 8'h56",
+      "line": 19,
+      "before": "c   = in_code ^ 8'h55;",
+      "after": "c   = in_code ^ 8'h56;",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_alaw_dec FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "const-19-20-",
+      "module": "g711_alaw_dec",
+      "operator": "constant",
+      "description": "changed 8'h55 to 8'h54",
+      "line": 19,
+      "before": "c   = in_code ^ 8'h55;",
+      "after": "c   = in_code ^ 8'h54;",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_alaw_dec FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "const-22-15+",
+      "module": "g711_alaw_dec",
+      "operator": "constant",
+      "description": "changed 3'd0 to 3'd1",
+      "line": 22,
+      "before": "if (seg == 3'd0)",
+      "after": "if (seg == 3'd1)",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_alaw_dec FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "const-23-13+",
+      "module": "g711_alaw_dec",
+      "operator": "constant",
+      "description": "changed 8'd0 to 8'd1",
+      "line": 23,
+      "before": "mag = {8'd0, 3'b000, c[3:0], 1'b1} << 3;",
+      "after": "mag = {8'd1, 3'b000, c[3:0], 1'b1} << 3;",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_alaw_dec FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "const-25-13+",
+      "module": "g711_alaw_dec",
+      "operator": "constant",
+      "description": "changed 10'd0 to 10'd1",
+      "line": 25,
+      "before": "mag = {10'd0, 1'b1, c[3:0], 1'b1} << ({1'b0, seg} + 4'd2);",
+      "after": "mag = {10'd1, 1'b1, c[3:0], 1'b1} << ({1'b0, seg} + 4'd2);",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_alaw_dec FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "const-25-58+",
+      "module": "g711_alaw_dec",
+      "operator": "constant",
+      "description": "changed 4'd2 to 4'd3",
+      "line": 25,
+      "before": "mag = {10'd0, 1'b1, c[3:0], 1'b1} << ({1'b0, seg} + 4'd2);",
+      "after": "mag = {10'd0, 1'b1, c[3:0], 1'b1} << ({1'b0, seg} + 4'd3);",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_alaw_dec FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "const-25-58-",
+      "module": "g711_alaw_dec",
+      "operator": "constant",
+      "description": "changed 4'd2 to 4'd1",
+      "line": 25,
+      "before": "mag = {10'd0, 1'b1, c[3:0], 1'b1} << ({1'b0, seg} + 4'd2);",
+      "after": "mag = {10'd0, 1'b1, c[3:0], 1'b1} << ({1'b0, seg} + 4'd1);",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_alaw_dec FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "const-26-31+",
+      "module": "g711_alaw_dec",
+      "operator": "constant",
+      "description": "changed 16'd1 to 16'd2",
+      "line": 26,
+      "before": "pcm = c[7] ? mag : (~mag + 16'd1);",
+      "after": "pcm = c[7] ? mag : (~mag + 16'd2);",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_alaw_dec FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "const-26-31-",
+      "module": "g711_alaw_dec",
+      "operator": "constant",
+      "description": "changed 16'd1 to 16'd0",
+      "line": 26,
+      "before": "pcm = c[7] ? mag : (~mag + 16'd1);",
+      "after": "pcm = c[7] ? mag : (~mag + 16'd0);",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_alaw_dec FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "drop-33",
+      "module": "g711_alaw_dec",
+      "operator": "dropped-update",
+      "description": "deleted the update of out_valid",
+      "line": 33,
+      "before": "if (!rst_n)        out_valid <= 1'b0;",
+      "after": "if (!rst_n)        begin end",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_alaw_dec FAIL [A6_reset_empties]"
+      }
+    },
+    {
+      "id": "drop-34",
+      "module": "g711_alaw_dec",
+      "operator": "dropped-update",
+      "description": "deleted the update of out_valid",
+      "line": 34,
+      "before": "else if (in_ready) out_valid <= in_valid;",
+      "after": "else if (in_ready) begin end",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_alaw_dec FAIL [A2_valid_iff_pending]; cover_alaw_dec FAIL [C1_deliver, C2_push_while_pop, C3_stall]"
+      }
+    },
+    {
+      "id": "drop-38",
+      "module": "g711_alaw_dec",
+      "operator": "dropped-update",
+      "description": "deleted the update of out_pcm",
+      "line": 38,
+      "before": "if (in_ready && in_valid) out_pcm <= pcm;",
+      "after": "if (in_ready && in_valid) begin end",
+      "status": "caught",
+      "caught_by": [
+        "lint",
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "fail",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "lint": "g711_alaw_dec: %Warning-UNDRIVEN: /Users/kos2001/gitspace/codec-agent/build/mutate/cand/g711_alaw_dec-drop-38/g711_alaw_dec.sv:11:30: Signal is not driven: 'out_pcm'",
+        "simulate": "11/16 tests pass",
+        "formal": "prove_alaw_dec FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "inversion-26-24",
+      "module": "g711_alaw_dec",
+      "operator": "inversion",
+      "description": "dropped a bitwise inversion",
+      "line": 26,
+      "before": "pcm = c[7] ? mag : (~mag + 16'd1);",
+      "after": "pcm = c[7] ? mag : (mag + 16'd1);",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_alaw_dec FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "inversion-29-20",
+      "module": "g711_alaw_dec",
+      "operator": "inversion",
+      "description": "dropped a bitwise inversion",
+      "line": 29,
+      "before": "assign in_ready = ~out_valid | out_ready;",
+      "after": "assign in_ready = out_valid | out_ready;",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "12/16 tests pass",
+        "formal": "prove_alaw_dec FAIL [A3_no_false_backpress]"
+      }
+    },
+    {
+      "id": "inversion-33-8",
+      "module": "g711_alaw_dec",
+      "operator": "inversion",
+      "description": "dropped a logical negation",
+      "line": 33,
+      "before": "if (!rst_n)        out_valid <= 1'b0;",
+      "after": "if (rst_n)        out_valid <= 1'b0;",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_alaw_dec FAIL [A6_reset_empties]"
+      }
+    },
+    {
+      "id": "mux-26",
+      "module": "g711_alaw_dec",
+      "operator": "mux-swap",
+      "description": "swapped the arms of a ?:",
+      "line": 26,
+      "before": "pcm = c[7] ? mag : (~mag + 16'd1);",
+      "after": "pcm = c[7] ? (~mag + 16'd1) : mag;",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_alaw_dec FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "relational-22-12",
+      "module": "g711_alaw_dec",
+      "operator": "relational",
+      "description": "inverted an equality",
+      "line": 22,
+      "before": "if (seg == 3'd0)",
+      "after": "if (seg != 3'd0)",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_alaw_dec FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "async-reset-32",
+      "module": "g711_alaw_dec",
+      "operator": "reset-style",
+      "description": "made the reset asynchronous",
+      "line": 32,
+      "before": "always_ff @(posedge clk) begin",
+      "after": "always_ff @(posedge clk or negedge rst_n) begin",
+      "status": "caught",
+      "caught_by": [
+        "synthesize"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "fail",
+        "simulate": "pass",
+        "formal": "pass",
+        "equiv": "skip"
+      },
+      "details": {
+        "synthesize": "g711_alaw_dec: REQ-IF-04 violated: asynchronous reset/set flip-flop (use always_ff @(posedge clk) with if (!rst_n))"
+      }
+    },
+    {
+      "id": "slice-20-10+",
+      "module": "g711_alaw_dec",
+      "operator": "slice-shift",
+      "description": "shifted c[6:4] to c[7:5]",
+      "line": 20,
+      "before": "seg = c[6:4];",
+      "after": "seg = c[7:5];",
+      "status": "caught",
+      "caught_by": [
+        "lint",
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "fail",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "lint": "g711_alaw_dec: %Warning-UNUSEDSIGNAL: /Users/kos2001/gitspace/codec-agent/build/mutate/cand/g711_alaw_dec-slice-20-10+/g711_alaw_dec.sv:13:16: Bits of signal are not used: 'c'[4]",
+        "simulate": "11/16 tests pass",
+        "formal": "prove_alaw_dec FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "slice-20-10-",
+      "module": "g711_alaw_dec",
+      "operator": "slice-shift",
+      "description": "shifted c[6:4] to c[5:3]",
+      "line": 20,
+      "before": "seg = c[6:4];",
+      "after": "seg = c[5:3];",
+      "status": "caught",
+      "caught_by": [
+        "lint",
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "fail",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "lint": "g711_alaw_dec: %Warning-UNUSEDSIGNAL: /Users/kos2001/gitspace/codec-agent/build/mutate/cand/g711_alaw_dec-slice-20-10-/g711_alaw_dec.sv:13:16: Bits of signal are not used: 'c'[6]",
+        "simulate": "11/16 tests pass",
+        "formal": "prove_alaw_dec FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "slice-23-27+",
+      "module": "g711_alaw_dec",
+      "operator": "slice-shift",
+      "description": "shifted c[3:0] to c[4:1]",
+      "line": 23,
+      "before": "mag = {8'd0, 3'b000, c[3:0], 1'b1} << 3;",
+      "after": "mag = {8'd0, 3'b000, c[4:1], 1'b1} << 3;",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_alaw_dec FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "slice-25-26+",
+      "module": "g711_alaw_dec",
+      "operator": "slice-shift",
+      "description": "shifted c[3:0] to c[4:1]",
+      "line": 25,
+      "before": "mag = {10'd0, 1'b1, c[3:0], 1'b1} << ({1'b0, seg} + 4'd2);",
+      "after": "mag = {10'd0, 1'b1, c[4:1], 1'b1} << ({1'b0, seg} + 4'd2);",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_alaw_dec FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "stuck-29-0",
+      "module": "g711_alaw_dec",
+      "operator": "stuck-at",
+      "description": "tied in_ready to 1'b0",
+      "line": 29,
+      "before": "assign in_ready = ~out_valid | out_ready;",
+      "after": "assign in_ready = 1'b0;",
+      "status": "caught",
+      "caught_by": [
+        "lint",
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "fail",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "lint": "g711_alaw_dec: %Warning-UNUSEDSIGNAL: /Users/kos2001/gitspace/codec-agent/build/mutate/cand/g711_alaw_dec-stuck-29-0/g711_alaw_dec.sv:10:30: Signal is not used: 'out_ready'",
+        "simulate": "11/16 tests pass",
+        "formal": "prove_alaw_dec FAIL [A2_valid_iff_pending, A3_no_false_backpress]; cover_alaw_dec FAIL [C1_deliver, C2_push_while_pop, C3_stall]"
+      }
+    },
+    {
+      "id": "stuck-29-1",
+      "module": "g711_alaw_dec",
+      "operator": "stuck-at",
+      "description": "tied in_ready to 1'b1",
+      "line": 29,
+      "before": "assign in_ready = ~out_valid | out_ready;",
+      "after": "assign in_ready = 1'b1;",
+      "status": "caught",
+      "caught_by": [
+        "lint",
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "fail",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "lint": "g711_alaw_dec: %Warning-UNUSEDSIGNAL: /Users/kos2001/gitspace/codec-agent/build/mutate/cand/g711_alaw_dec-stuck-29-1/g711_alaw_dec.sv:10:30: Signal is not used: 'out_ready'",
+        "simulate": "13/16 tests pass",
+        "formal": "prove_alaw_dec FAIL [A1_no_overflow, A2_valid_iff_pending, A4_stable_under_stall]"
+      }
+    },
+    {
+      "id": "boolean-48-29",
+      "module": "g711_alaw_enc",
+      "operator": "boolean",
+      "description": "turned ^ into |",
+      "line": 48,
+      "before": "code = {sign, seg, step} ^ 8'h55;",
+      "after": "code = {sign, seg, step} | 8'h55;",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_alaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "boolean-51-31",
+      "module": "g711_alaw_enc",
+      "operator": "boolean",
+      "description": "turned | into &",
+      "line": 51,
+      "before": "assign in_ready = ~out_valid | out_ready;",
+      "after": "assign in_ready = ~out_valid & out_ready;",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_alaw_enc FAIL [A3_no_false_backpress]; cover_alaw_enc FAIL [C2_push_while_pop]"
+      }
+    },
+    {
+      "id": "const-27-30-",
+      "module": "g711_alaw_enc",
+      "operator": "constant",
+      "description": "changed 3'd7 to 3'd6",
+      "line": 27,
+      "before": "12'b1???????????: seg = 3'd7;",
+      "after": "12'b1???????????: seg = 3'd6;",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_alaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "const-28-30+",
+      "module": "g711_alaw_enc",
+      "operator": "constant",
+      "description": "changed 3'd6 to 3'd7",
+      "line": 28,
+      "before": "12'b01??????????: seg = 3'd6;",
+      "after": "12'b01??????????: seg = 3'd7;",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_alaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "const-28-30-",
+      "module": "g711_alaw_enc",
+      "operator": "constant",
+      "description": "changed 3'd6 to 3'd5",
+      "line": 28,
+      "before": "12'b01??????????: seg = 3'd6;",
+      "after": "12'b01??????????: seg = 3'd5;",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_alaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "const-29-30+",
+      "module": "g711_alaw_enc",
+      "operator": "constant",
+      "description": "changed 3'd5 to 3'd6",
+      "line": 29,
+      "before": "12'b001?????????: seg = 3'd5;",
+      "after": "12'b001?????????: seg = 3'd6;",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_alaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "const-29-30-",
+      "module": "g711_alaw_enc",
+      "operator": "constant",
+      "description": "changed 3'd5 to 3'd4",
+      "line": 29,
+      "before": "12'b001?????????: seg = 3'd5;",
+      "after": "12'b001?????????: seg = 3'd4;",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_alaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "const-30-30+",
+      "module": "g711_alaw_enc",
+      "operator": "constant",
+      "description": "changed 3'd4 to 3'd5",
+      "line": 30,
+      "before": "12'b0001????????: seg = 3'd4;",
+      "after": "12'b0001????????: seg = 3'd5;",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_alaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "const-30-30-",
+      "module": "g711_alaw_enc",
+      "operator": "constant",
+      "description": "changed 3'd4 to 3'd3",
+      "line": 30,
+      "before": "12'b0001????????: seg = 3'd4;",
+      "after": "12'b0001????????: seg = 3'd3;",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_alaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "const-31-30+",
+      "module": "g711_alaw_enc",
+      "operator": "constant",
+      "description": "changed 3'd3 to 3'd4",
+      "line": 31,
+      "before": "12'b00001???????: seg = 3'd3;",
+      "after": "12'b00001???????: seg = 3'd4;",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_alaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "const-31-30-",
+      "module": "g711_alaw_enc",
+      "operator": "constant",
+      "description": "changed 3'd3 to 3'd2",
+      "line": 31,
+      "before": "12'b00001???????: seg = 3'd3;",
+      "after": "12'b00001???????: seg = 3'd2;",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_alaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "const-32-30+",
+      "module": "g711_alaw_enc",
+      "operator": "constant",
+      "description": "changed 3'd2 to 3'd3",
+      "line": 32,
+      "before": "12'b000001??????: seg = 3'd2;",
+      "after": "12'b000001??????: seg = 3'd3;",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_alaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "const-32-30-",
+      "module": "g711_alaw_enc",
+      "operator": "constant",
+      "description": "changed 3'd2 to 3'd1",
+      "line": 32,
+      "before": "12'b000001??????: seg = 3'd2;",
+      "after": "12'b000001??????: seg = 3'd1;",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_alaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "const-33-30+",
+      "module": "g711_alaw_enc",
+      "operator": "constant",
+      "description": "changed 3'd1 to 3'd2",
+      "line": 33,
+      "before": "12'b0000001?????: seg = 3'd1;",
+      "after": "12'b0000001?????: seg = 3'd2;",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_alaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "const-33-30-",
+      "module": "g711_alaw_enc",
+      "operator": "constant",
+      "description": "changed 3'd1 to 3'd0",
+      "line": 33,
+      "before": "12'b0000001?????: seg = 3'd1;",
+      "after": "12'b0000001?????: seg = 3'd0;",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_alaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "const-34-30+",
+      "module": "g711_alaw_enc",
+      "operator": "constant",
+      "description": "changed 3'd0 to 3'd1",
+      "line": 34,
+      "before": "default:          seg = 3'd0;",
+      "after": "default:          seg = 3'd1;",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_alaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "const-38-6+",
+      "module": "g711_alaw_enc",
+      "operator": "constant",
+      "description": "changed 3'd0 to 3'd1",
+      "line": 38,
+      "before": "3'd0:    step = mag[4:1];",
+      "after": "3'd1:    step = mag[4:1];",
+      "status": "caught",
+      "caught_by": [
+        "lint",
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "fail",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "lint": "g711_alaw_enc: %Warning-CASEOVERLAP: /Users/kos2001/gitspace/codec-agent/build/mutate/cand/g711_alaw_enc-const-38-6+/g711_alaw_enc.sv:39:7: Case conditions overlap",
+        "simulate": "11/16 tests pass",
+        "formal": "prove_alaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "const-39-6+",
+      "module": "g711_alaw_enc",
+      "operator": "constant",
+      "description": "changed 3'd1 to 3'd2",
+      "line": 39,
+      "before": "3'd1:    step = mag[4:1];",
+      "after": "3'd2:    step = mag[4:1];",
+      "status": "caught",
+      "caught_by": [
+        "lint",
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "fail",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "lint": "g711_alaw_enc: %Warning-CASEOVERLAP: /Users/kos2001/gitspace/codec-agent/build/mutate/cand/g711_alaw_enc-const-39-6+/g711_alaw_enc.sv:40:7: Case conditions overlap",
+        "simulate": "11/16 tests pass",
+        "formal": "prove_alaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "const-39-6-",
+      "module": "g711_alaw_enc",
+      "operator": "constant",
+      "description": "changed 3'd1 to 3'd0",
+      "line": 39,
+      "before": "3'd1:    step = mag[4:1];",
+      "after": "3'd0:    step = mag[4:1];",
+      "status": "caught",
+      "caught_by": [
+        "lint",
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "fail",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "lint": "g711_alaw_enc: %Warning-CASEOVERLAP: /Users/kos2001/gitspace/codec-agent/build/mutate/cand/g711_alaw_enc-const-39-6-/g711_alaw_enc.sv:39:7: Case conditions overlap",
+        "simulate": "11/16 tests pass",
+        "formal": "prove_alaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "const-40-6+",
+      "module": "g711_alaw_enc",
+      "operator": "constant",
+      "description": "changed 3'd2 to 3'd3",
+      "line": 40,
+      "before": "3'd2:    step = mag[5:2];",
+      "after": "3'd3:    step = mag[5:2];",
+      "status": "caught",
+      "caught_by": [
+        "lint",
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "fail",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "lint": "g711_alaw_enc: %Warning-CASEOVERLAP: /Users/kos2001/gitspace/codec-agent/build/mutate/cand/g711_alaw_enc-const-40-6+/g711_alaw_enc.sv:41:7: Case conditions overlap",
+        "simulate": "11/16 tests pass",
+        "formal": "prove_alaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "const-40-6-",
+      "module": "g711_alaw_enc",
+      "operator": "constant",
+      "description": "changed 3'd2 to 3'd1",
+      "line": 40,
+      "before": "3'd2:    step = mag[5:2];",
+      "after": "3'd1:    step = mag[5:2];",
+      "status": "caught",
+      "caught_by": [
+        "lint",
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "fail",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "lint": "g711_alaw_enc: %Warning-CASEOVERLAP: /Users/kos2001/gitspace/codec-agent/build/mutate/cand/g711_alaw_enc-const-40-6-/g711_alaw_enc.sv:40:7: Case conditions overlap",
+        "simulate": "11/16 tests pass",
+        "formal": "prove_alaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "const-41-6+",
+      "module": "g711_alaw_enc",
+      "operator": "constant",
+      "description": "changed 3'd3 to 3'd4",
+      "line": 41,
+      "before": "3'd3:    step = mag[6:3];",
+      "after": "3'd4:    step = mag[6:3];",
+      "status": "caught",
+      "caught_by": [
+        "lint",
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "fail",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "lint": "g711_alaw_enc: %Warning-CASEOVERLAP: /Users/kos2001/gitspace/codec-agent/build/mutate/cand/g711_alaw_enc-const-41-6+/g711_alaw_enc.sv:42:7: Case conditions overlap",
+        "simulate": "11/16 tests pass",
+        "formal": "prove_alaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "const-41-6-",
+      "module": "g711_alaw_enc",
+      "operator": "constant",
+      "description": "changed 3'd3 to 3'd2",
+      "line": 41,
+      "before": "3'd3:    step = mag[6:3];",
+      "after": "3'd2:    step = mag[6:3];",
+      "status": "caught",
+      "caught_by": [
+        "lint",
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "fail",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "lint": "g711_alaw_enc: %Warning-CASEOVERLAP: /Users/kos2001/gitspace/codec-agent/build/mutate/cand/g711_alaw_enc-const-41-6-/g711_alaw_enc.sv:41:7: Case conditions overlap",
+        "simulate": "11/16 tests pass",
+        "formal": "prove_alaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "const-42-6+",
+      "module": "g711_alaw_enc",
+      "operator": "constant",
+      "description": "changed 3'd4 to 3'd5",
+      "line": 42,
+      "before": "3'd4:    step = mag[7:4];",
+      "after": "3'd5:    step = mag[7:4];",
+      "status": "caught",
+      "caught_by": [
+        "lint",
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "fail",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "lint": "g711_alaw_enc: %Warning-CASEOVERLAP: /Users/kos2001/gitspace/codec-agent/build/mutate/cand/g711_alaw_enc-const-42-6+/g711_alaw_enc.sv:43:7: Case conditions overlap",
+        "simulate": "11/16 tests pass",
+        "formal": "prove_alaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "const-42-6-",
+      "module": "g711_alaw_enc",
+      "operator": "constant",
+      "description": "changed 3'd4 to 3'd3",
+      "line": 42,
+      "before": "3'd4:    step = mag[7:4];",
+      "after": "3'd3:    step = mag[7:4];",
+      "status": "caught",
+      "caught_by": [
+        "lint",
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "fail",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "lint": "g711_alaw_enc: %Warning-CASEOVERLAP: /Users/kos2001/gitspace/codec-agent/build/mutate/cand/g711_alaw_enc-const-42-6-/g711_alaw_enc.sv:42:7: Case conditions overlap",
+        "simulate": "11/16 tests pass",
+        "formal": "prove_alaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "const-43-6+",
+      "module": "g711_alaw_enc",
+      "operator": "constant",
+      "description": "changed 3'd5 to 3'd6",
+      "line": 43,
+      "before": "3'd5:    step = mag[8:5];",
+      "after": "3'd6:    step = mag[8:5];",
+      "status": "caught",
+      "caught_by": [
+        "lint",
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "fail",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "lint": "g711_alaw_enc: %Warning-CASEOVERLAP: /Users/kos2001/gitspace/codec-agent/build/mutate/cand/g711_alaw_enc-const-43-6+/g711_alaw_enc.sv:44:7: Case conditions overlap",
+        "simulate": "11/16 tests pass",
+        "formal": "prove_alaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "const-43-6-",
+      "module": "g711_alaw_enc",
+      "operator": "constant",
+      "description": "changed 3'd5 to 3'd4",
+      "line": 43,
+      "before": "3'd5:    step = mag[8:5];",
+      "after": "3'd4:    step = mag[8:5];",
+      "status": "caught",
+      "caught_by": [
+        "lint",
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "fail",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "lint": "g711_alaw_enc: %Warning-CASEOVERLAP: /Users/kos2001/gitspace/codec-agent/build/mutate/cand/g711_alaw_enc-const-43-6-/g711_alaw_enc.sv:43:7: Case conditions overlap",
+        "simulate": "11/16 tests pass",
+        "formal": "prove_alaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "const-44-6+",
+      "module": "g711_alaw_enc",
+      "operator": "constant",
+      "description": "changed 3'd6 to 3'd7",
+      "line": 44,
+      "before": "3'd6:    step = mag[9:6];",
+      "after": "3'd7:    step = mag[9:6];",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_alaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "const-44-6-",
+      "module": "g711_alaw_enc",
+      "operator": "constant",
+      "description": "changed 3'd6 to 3'd5",
+      "line": 44,
+      "before": "3'd6:    step = mag[9:6];",
+      "after": "3'd5:    step = mag[9:6];",
+      "status": "caught",
+      "caught_by": [
+        "lint",
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "fail",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "lint": "g711_alaw_enc: %Warning-CASEOVERLAP: /Users/kos2001/gitspace/codec-agent/build/mutate/cand/g711_alaw_enc-const-44-6-/g711_alaw_enc.sv:44:7: Case conditions overlap",
+        "simulate": "11/16 tests pass",
+        "formal": "prove_alaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "const-48-31+",
+      "module": "g711_alaw_enc",
+      "operator": "constant",
+      "description": "changed 8'h55 to 8'h56",
+      "line": 48,
+      "before": "code = {sign, seg, step} ^ 8'h55;",
+      "after": "code = {sign, seg, step} ^ 8'h56;",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_alaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "const-48-31-",
+      "module": "g711_alaw_enc",
+      "operator": "constant",
+      "description": "changed 8'h55 to 8'h54",
+      "line": 48,
+      "before": "code = {sign, seg, step} ^ 8'h55;",
+      "after": "code = {sign, seg, step} ^ 8'h54;",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_alaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "drop-55",
+      "module": "g711_alaw_enc",
+      "operator": "dropped-update",
+      "description": "deleted the update of out_valid",
+      "line": 55,
+      "before": "if (!rst_n)        out_valid <= 1'b0;",
+      "after": "if (!rst_n)        begin end",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "13/16 tests pass",
+        "formal": "prove_alaw_enc FAIL [A6_reset_empties]"
+      }
+    },
+    {
+      "id": "drop-56",
+      "module": "g711_alaw_enc",
+      "operator": "dropped-update",
+      "description": "deleted the update of out_valid",
+      "line": 56,
+      "before": "else if (in_ready) out_valid <= in_valid;",
+      "after": "else if (in_ready) begin end",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_alaw_enc FAIL [A2_valid_iff_pending]; cover_alaw_enc FAIL [C1_deliver, C2_push_while_pop, C3_stall]"
+      }
+    },
+    {
+      "id": "drop-60",
+      "module": "g711_alaw_enc",
+      "operator": "dropped-update",
+      "description": "deleted the update of out_code",
+      "line": 60,
+      "before": "if (in_ready && in_valid) out_code <= code;",
+      "after": "if (in_ready && in_valid) begin end",
+      "status": "caught",
+      "caught_by": [
+        "lint",
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "fail",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "lint": "g711_alaw_enc: %Warning-UNDRIVEN: /Users/kos2001/gitspace/codec-agent/build/mutate/cand/g711_alaw_enc-drop-60/g711_alaw_enc.sv:13:30: Signal is not driven: 'out_code'",
+        "simulate": "11/16 tests pass",
+        "formal": "prove_alaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "inversion-22-11",
+      "module": "g711_alaw_enc",
+      "operator": "inversion",
+      "description": "dropped a bitwise inversion",
+      "line": 22,
+      "before": "sign = ~in_pcm[15];",
+      "after": "sign = in_pcm[15];",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_alaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "inversion-23-33",
+      "module": "g711_alaw_enc",
+      "operator": "inversion",
+      "description": "dropped a bitwise inversion",
+      "line": 23,
+      "before": "mag  = sign ? in_pcm[14:3] : ~in_pcm[14:3];",
+      "after": "mag  = sign ? in_pcm[14:3] : in_pcm[14:3];",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_alaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "inversion-51-20",
+      "module": "g711_alaw_enc",
+      "operator": "inversion",
+      "description": "dropped a bitwise inversion",
+      "line": 51,
+      "before": "assign in_ready = ~out_valid | out_ready;",
+      "after": "assign in_ready = out_valid | out_ready;",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "12/16 tests pass",
+        "formal": "prove_alaw_enc FAIL [A3_no_false_backpress]"
+      }
+    },
+    {
+      "id": "inversion-55-8",
+      "module": "g711_alaw_enc",
+      "operator": "inversion",
+      "description": "dropped a logical negation",
+      "line": 55,
+      "before": "if (!rst_n)        out_valid <= 1'b0;",
+      "after": "if (rst_n)        out_valid <= 1'b0;",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_alaw_enc FAIL [A6_reset_empties]"
+      }
+    },
+    {
+      "id": "mux-23",
+      "module": "g711_alaw_enc",
+      "operator": "mux-swap",
+      "description": "swapped the arms of a ?:",
+      "line": 23,
+      "before": "mag  = sign ? in_pcm[14:3] : ~in_pcm[14:3];",
+      "after": "mag  = sign ? 3] : ~in_pcm[14:3] : in_pcm[14;",
+      "status": "caught",
+      "caught_by": [
+        "lint",
+        "synthesize",
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "fail",
+        "synthesize": "fail",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "skip"
+      },
+      "details": {
+        "lint": "g711_alaw_enc: %Error: /Users/kos2001/gitspace/codec-agent/build/mutate/cand/g711_alaw_enc-mux-23/g711_alaw_enc.sv:23:20: syntax error, unexpected ']'",
+        "synthesize": "g711_alaw_enc: /Users/kos2001/gitspace/codec-agent/build/mutate/cand/g711_alaw_enc-mux-23/g711_alaw_enc.sv:23: ERROR: syntax error, unexpected ']'",
+        "simulate": "0/16 tests pass",
+        "formal": "prove_alaw_enc ERROR (syntax error, unexpected ']'); prove_alaw_dec ERROR (syntax error, unexpected ']'); prove_ulaw_enc ERROR (syntax error, unexpected ']'); prove_ulaw_dec ERROR (syntax error, unexpected ']'); cover_alaw_enc ERROR (syntax error, unexpected ']'); cover_alaw_dec ERROR (syntax error, unexpected ']'); cover_ulaw_enc ERROR (syntax error, unexpected ']'); cover_ulaw_dec ERROR (syntax error, unexpected ']')"
+      }
+    },
+    {
+      "id": "async-reset-54",
+      "module": "g711_alaw_enc",
+      "operator": "reset-style",
+      "description": "made the reset asynchronous",
+      "line": 54,
+      "before": "always_ff @(posedge clk) begin",
+      "after": "always_ff @(posedge clk or negedge rst_n) begin",
+      "status": "caught",
+      "caught_by": [
+        "synthesize"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "fail",
+        "simulate": "pass",
+        "formal": "pass",
+        "equiv": "skip"
+      },
+      "details": {
+        "synthesize": "g711_alaw_enc: REQ-IF-04 violated: asynchronous reset/set flip-flop (use always_ff @(posedge clk) with if (!rst_n))"
+      }
+    },
+    {
+      "id": "slice-23-18+",
+      "module": "g711_alaw_enc",
+      "operator": "slice-shift",
+      "description": "shifted in_pcm[14:3] to in_pcm[15:4]",
+      "line": 23,
+      "before": "mag  = sign ? in_pcm[14:3] : ~in_pcm[14:3];",
+      "after": "mag  = sign ? in_pcm[15:4] : ~in_pcm[14:3];",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_alaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "slice-23-18-",
+      "module": "g711_alaw_enc",
+      "operator": "slice-shift",
+      "description": "shifted in_pcm[14:3] to in_pcm[13:2]",
+      "line": 23,
+      "before": "mag  = sign ? in_pcm[14:3] : ~in_pcm[14:3];",
+      "after": "mag  = sign ? in_pcm[13:2] : ~in_pcm[14:3];",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_alaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "slice-23-34+",
+      "module": "g711_alaw_enc",
+      "operator": "slice-shift",
+      "description": "shifted in_pcm[14:3] to in_pcm[15:4]",
+      "line": 23,
+      "before": "mag  = sign ? in_pcm[14:3] : ~in_pcm[14:3];",
+      "after": "mag  = sign ? in_pcm[14:3] : ~in_pcm[15:4];",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_alaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "slice-23-34-",
+      "module": "g711_alaw_enc",
+      "operator": "slice-shift",
+      "description": "shifted in_pcm[14:3] to in_pcm[13:2]",
+      "line": 23,
+      "before": "mag  = sign ? in_pcm[14:3] : ~in_pcm[14:3];",
+      "after": "mag  = sign ? in_pcm[14:3] : ~in_pcm[13:2];",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_alaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "slice-38-22+",
+      "module": "g711_alaw_enc",
+      "operator": "slice-shift",
+      "description": "shifted mag[4:1] to mag[5:2]",
+      "line": 38,
+      "before": "3'd0:    step = mag[4:1];",
+      "after": "3'd0:    step = mag[5:2];",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_alaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "slice-38-22-",
+      "module": "g711_alaw_enc",
+      "operator": "slice-shift",
+      "description": "shifted mag[4:1] to mag[3:0]",
+      "line": 38,
+      "before": "3'd0:    step = mag[4:1];",
+      "after": "3'd0:    step = mag[3:0];",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_alaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "slice-39-22+",
+      "module": "g711_alaw_enc",
+      "operator": "slice-shift",
+      "description": "shifted mag[4:1] to mag[5:2]",
+      "line": 39,
+      "before": "3'd1:    step = mag[4:1];",
+      "after": "3'd1:    step = mag[5:2];",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_alaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "slice-39-22-",
+      "module": "g711_alaw_enc",
+      "operator": "slice-shift",
+      "description": "shifted mag[4:1] to mag[3:0]",
+      "line": 39,
+      "before": "3'd1:    step = mag[4:1];",
+      "after": "3'd1:    step = mag[3:0];",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_alaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "slice-40-22+",
+      "module": "g711_alaw_enc",
+      "operator": "slice-shift",
+      "description": "shifted mag[5:2] to mag[6:3]",
+      "line": 40,
+      "before": "3'd2:    step = mag[5:2];",
+      "after": "3'd2:    step = mag[6:3];",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_alaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "slice-40-22-",
+      "module": "g711_alaw_enc",
+      "operator": "slice-shift",
+      "description": "shifted mag[5:2] to mag[4:1]",
+      "line": 40,
+      "before": "3'd2:    step = mag[5:2];",
+      "after": "3'd2:    step = mag[4:1];",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "13/16 tests pass",
+        "formal": "prove_alaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "slice-41-22+",
+      "module": "g711_alaw_enc",
+      "operator": "slice-shift",
+      "description": "shifted mag[6:3] to mag[7:4]",
+      "line": 41,
+      "before": "3'd3:    step = mag[6:3];",
+      "after": "3'd3:    step = mag[7:4];",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_alaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "slice-41-22-",
+      "module": "g711_alaw_enc",
+      "operator": "slice-shift",
+      "description": "shifted mag[6:3] to mag[5:2]",
+      "line": 41,
+      "before": "3'd3:    step = mag[6:3];",
+      "after": "3'd3:    step = mag[5:2];",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "13/16 tests pass",
+        "formal": "prove_alaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "slice-42-22+",
+      "module": "g711_alaw_enc",
+      "operator": "slice-shift",
+      "description": "shifted mag[7:4] to mag[8:5]",
+      "line": 42,
+      "before": "3'd4:    step = mag[7:4];",
+      "after": "3'd4:    step = mag[8:5];",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_alaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "slice-42-22-",
+      "module": "g711_alaw_enc",
+      "operator": "slice-shift",
+      "description": "shifted mag[7:4] to mag[6:3]",
+      "line": 42,
+      "before": "3'd4:    step = mag[7:4];",
+      "after": "3'd4:    step = mag[6:3];",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "13/16 tests pass",
+        "formal": "prove_alaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "slice-43-22+",
+      "module": "g711_alaw_enc",
+      "operator": "slice-shift",
+      "description": "shifted mag[8:5] to mag[9:6]",
+      "line": 43,
+      "before": "3'd5:    step = mag[8:5];",
+      "after": "3'd5:    step = mag[9:6];",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_alaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "slice-43-22-",
+      "module": "g711_alaw_enc",
+      "operator": "slice-shift",
+      "description": "shifted mag[8:5] to mag[7:4]",
+      "line": 43,
+      "before": "3'd5:    step = mag[8:5];",
+      "after": "3'd5:    step = mag[7:4];",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "13/16 tests pass",
+        "formal": "prove_alaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "slice-44-22+",
+      "module": "g711_alaw_enc",
+      "operator": "slice-shift",
+      "description": "shifted mag[9:6] to mag[10:7]",
+      "line": 44,
+      "before": "3'd6:    step = mag[9:6];",
+      "after": "3'd6:    step = mag[10:7];",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_alaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "slice-44-22-",
+      "module": "g711_alaw_enc",
+      "operator": "slice-shift",
+      "description": "shifted mag[9:6] to mag[8:5]",
+      "line": 44,
+      "before": "3'd6:    step = mag[9:6];",
+      "after": "3'd6:    step = mag[8:5];",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "13/16 tests pass",
+        "formal": "prove_alaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "slice-45-22+",
+      "module": "g711_alaw_enc",
+      "operator": "slice-shift",
+      "description": "shifted mag[10:7] to mag[11:8]",
+      "line": 45,
+      "before": "default: step = mag[10:7];",
+      "after": "default: step = mag[11:8];",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_alaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "slice-45-22-",
+      "module": "g711_alaw_enc",
+      "operator": "slice-shift",
+      "description": "shifted mag[10:7] to mag[9:6]",
+      "line": 45,
+      "before": "default: step = mag[10:7];",
+      "after": "default: step = mag[9:6];",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "13/16 tests pass",
+        "formal": "prove_alaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "stuck-51-0",
+      "module": "g711_alaw_enc",
+      "operator": "stuck-at",
+      "description": "tied in_ready to 1'b0",
+      "line": 51,
+      "before": "assign in_ready = ~out_valid | out_ready;",
+      "after": "assign in_ready = 1'b0;",
+      "status": "caught",
+      "caught_by": [
+        "lint",
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "fail",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "lint": "g711_alaw_enc: %Warning-UNUSEDSIGNAL: /Users/kos2001/gitspace/codec-agent/build/mutate/cand/g711_alaw_enc-stuck-51-0/g711_alaw_enc.sv:12:30: Signal is not used: 'out_ready'",
+        "simulate": "11/16 tests pass",
+        "formal": "prove_alaw_enc FAIL [A3_no_false_backpress]; cover_alaw_enc FAIL [C1_deliver, C2_push_while_pop, C3_stall]"
+      }
+    },
+    {
+      "id": "stuck-51-1",
+      "module": "g711_alaw_enc",
+      "operator": "stuck-at",
+      "description": "tied in_ready to 1'b1",
+      "line": 51,
+      "before": "assign in_ready = ~out_valid | out_ready;",
+      "after": "assign in_ready = 1'b1;",
+      "status": "caught",
+      "caught_by": [
+        "lint",
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "fail",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "lint": "g711_alaw_enc: %Warning-UNUSEDSIGNAL: /Users/kos2001/gitspace/codec-agent/build/mutate/cand/g711_alaw_enc-stuck-51-1/g711_alaw_enc.sv:12:30: Signal is not used: 'out_ready'",
+        "simulate": "13/16 tests pass",
+        "formal": "prove_alaw_enc FAIL [A1_no_overflow, A2_valid_iff_pending, A4_stable_under_stall]"
+      }
+    },
+    {
+      "id": "arithmetic-22-48",
+      "module": "g711_ulaw_dec",
+      "operator": "arithmetic",
+      "description": "turned - into +",
+      "line": 22,
+      "before": "mag = (({10'd0, 1'b1, c[3:0], 1'b1} << seg) - 16'd33) << 2;",
+      "after": "mag = (({10'd0, 1'b1, c[3:0], 1'b1} << seg) + 16'd33) << 2;",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_ulaw_dec FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "arithmetic-23-29",
+      "module": "g711_ulaw_dec",
+      "operator": "arithmetic",
+      "description": "turned + into -",
+      "line": 23,
+      "before": "pcm = c[7] ? mag : (~mag + 16'd1);",
+      "after": "pcm = c[7] ? mag : (~mag - 16'd1);",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_ulaw_dec FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "boolean-19-18",
+      "module": "g711_ulaw_dec",
+      "operator": "boolean",
+      "description": "turned ^ into |",
+      "line": 19,
+      "before": "c   = in_code ^ 8'h7F;",
+      "after": "c   = in_code | 8'h7F;",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_ulaw_dec FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "boolean-26-31",
+      "module": "g711_ulaw_dec",
+      "operator": "boolean",
+      "description": "turned | into &",
+      "line": 26,
+      "before": "assign in_ready = ~out_valid | out_ready;",
+      "after": "assign in_ready = ~out_valid & out_ready;",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_ulaw_dec FAIL [A3_no_false_backpress]; cover_ulaw_dec FAIL [C2_push_while_pop]"
+      }
+    },
+    {
+      "id": "const-19-20+",
+      "module": "g711_ulaw_dec",
+      "operator": "constant",
+      "description": "changed 8'h7F to 8'h80",
+      "line": 19,
+      "before": "c   = in_code ^ 8'h7F;",
+      "after": "c   = in_code ^ 8'h80;",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_ulaw_dec FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "const-19-20-",
+      "module": "g711_ulaw_dec",
+      "operator": "constant",
+      "description": "changed 8'h7F to 8'h7E",
+      "line": 19,
+      "before": "c   = in_code ^ 8'h7F;",
+      "after": "c   = in_code ^ 8'h7E;",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_ulaw_dec FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "const-22-13+",
+      "module": "g711_ulaw_dec",
+      "operator": "constant",
+      "description": "changed 10'd0 to 10'd1",
+      "line": 22,
+      "before": "mag = (({10'd0, 1'b1, c[3:0], 1'b1} << seg) - 16'd33) << 2;",
+      "after": "mag = (({10'd1, 1'b1, c[3:0], 1'b1} << seg) - 16'd33) << 2;",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_ulaw_dec FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "const-22-50+",
+      "module": "g711_ulaw_dec",
+      "operator": "constant",
+      "description": "changed 16'd33 to 16'd34",
+      "line": 22,
+      "before": "mag = (({10'd0, 1'b1, c[3:0], 1'b1} << seg) - 16'd33) << 2;",
+      "after": "mag = (({10'd0, 1'b1, c[3:0], 1'b1} << seg) - 16'd34) << 2;",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_ulaw_dec FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "const-22-50-",
+      "module": "g711_ulaw_dec",
+      "operator": "constant",
+      "description": "changed 16'd33 to 16'd32",
+      "line": 22,
+      "before": "mag = (({10'd0, 1'b1, c[3:0], 1'b1} << seg) - 16'd33) << 2;",
+      "after": "mag = (({10'd0, 1'b1, c[3:0], 1'b1} << seg) - 16'd32) << 2;",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_ulaw_dec FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "const-23-31+",
+      "module": "g711_ulaw_dec",
+      "operator": "constant",
+      "description": "changed 16'd1 to 16'd2",
+      "line": 23,
+      "before": "pcm = c[7] ? mag : (~mag + 16'd1);",
+      "after": "pcm = c[7] ? mag : (~mag + 16'd2);",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_ulaw_dec FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "const-23-31-",
+      "module": "g711_ulaw_dec",
+      "operator": "constant",
+      "description": "changed 16'd1 to 16'd0",
+      "line": 23,
+      "before": "pcm = c[7] ? mag : (~mag + 16'd1);",
+      "after": "pcm = c[7] ? mag : (~mag + 16'd0);",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_ulaw_dec FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "drop-30",
+      "module": "g711_ulaw_dec",
+      "operator": "dropped-update",
+      "description": "deleted the update of out_valid",
+      "line": 30,
+      "before": "if (!rst_n)        out_valid <= 1'b0;",
+      "after": "if (!rst_n)        begin end",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_ulaw_dec FAIL [A6_reset_empties]"
+      }
+    },
+    {
+      "id": "drop-31",
+      "module": "g711_ulaw_dec",
+      "operator": "dropped-update",
+      "description": "deleted the update of out_valid",
+      "line": 31,
+      "before": "else if (in_ready) out_valid <= in_valid;",
+      "after": "else if (in_ready) begin end",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_ulaw_dec FAIL [A2_valid_iff_pending]; cover_ulaw_dec FAIL [C1_deliver, C2_push_while_pop, C3_stall]"
+      }
+    },
+    {
+      "id": "drop-35",
+      "module": "g711_ulaw_dec",
+      "operator": "dropped-update",
+      "description": "deleted the update of out_pcm",
+      "line": 35,
+      "before": "if (in_ready && in_valid) out_pcm <= pcm;",
+      "after": "if (in_ready && in_valid) begin end",
+      "status": "caught",
+      "caught_by": [
+        "lint",
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "fail",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "lint": "g711_ulaw_dec: %Warning-UNDRIVEN: /Users/kos2001/gitspace/codec-agent/build/mutate/cand/g711_ulaw_dec-drop-35/g711_ulaw_dec.sv:11:30: Signal is not driven: 'out_pcm'",
+        "simulate": "11/16 tests pass",
+        "formal": "prove_ulaw_dec FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "inversion-23-24",
+      "module": "g711_ulaw_dec",
+      "operator": "inversion",
+      "description": "dropped a bitwise inversion",
+      "line": 23,
+      "before": "pcm = c[7] ? mag : (~mag + 16'd1);",
+      "after": "pcm = c[7] ? mag : (mag + 16'd1);",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_ulaw_dec FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "inversion-26-20",
+      "module": "g711_ulaw_dec",
+      "operator": "inversion",
+      "description": "dropped a bitwise inversion",
+      "line": 26,
+      "before": "assign in_ready = ~out_valid | out_ready;",
+      "after": "assign in_ready = out_valid | out_ready;",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "12/16 tests pass",
+        "formal": "prove_ulaw_dec FAIL [A3_no_false_backpress]"
+      }
+    },
+    {
+      "id": "inversion-30-8",
+      "module": "g711_ulaw_dec",
+      "operator": "inversion",
+      "description": "dropped a logical negation",
+      "line": 30,
+      "before": "if (!rst_n)        out_valid <= 1'b0;",
+      "after": "if (rst_n)        out_valid <= 1'b0;",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_ulaw_dec FAIL [A6_reset_empties]"
+      }
+    },
+    {
+      "id": "mux-23",
+      "module": "g711_ulaw_dec",
+      "operator": "mux-swap",
+      "description": "swapped the arms of a ?:",
+      "line": 23,
+      "before": "pcm = c[7] ? mag : (~mag + 16'd1);",
+      "after": "pcm = c[7] ? (~mag + 16'd1) : mag;",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_ulaw_dec FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "async-reset-29",
+      "module": "g711_ulaw_dec",
+      "operator": "reset-style",
+      "description": "made the reset asynchronous",
+      "line": 29,
+      "before": "always_ff @(posedge clk) begin",
+      "after": "always_ff @(posedge clk or negedge rst_n) begin",
+      "status": "caught",
+      "caught_by": [
+        "synthesize"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "fail",
+        "simulate": "pass",
+        "formal": "pass",
+        "equiv": "skip"
+      },
+      "details": {
+        "synthesize": "g711_ulaw_dec: REQ-IF-04 violated: asynchronous reset/set flip-flop (use always_ff @(posedge clk) with if (!rst_n))"
+      }
+    },
+    {
+      "id": "slice-20-10+",
+      "module": "g711_ulaw_dec",
+      "operator": "slice-shift",
+      "description": "shifted c[6:4] to c[7:5]",
+      "line": 20,
+      "before": "seg = c[6:4];",
+      "after": "seg = c[7:5];",
+      "status": "caught",
+      "caught_by": [
+        "lint",
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "fail",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "lint": "g711_ulaw_dec: %Warning-UNUSEDSIGNAL: /Users/kos2001/gitspace/codec-agent/build/mutate/cand/g711_ulaw_dec-slice-20-10+/g711_ulaw_dec.sv:13:16: Bits of signal are not used: 'c'[4]",
+        "simulate": "11/16 tests pass",
+        "formal": "prove_ulaw_dec FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "slice-20-10-",
+      "module": "g711_ulaw_dec",
+      "operator": "slice-shift",
+      "description": "shifted c[6:4] to c[5:3]",
+      "line": 20,
+      "before": "seg = c[6:4];",
+      "after": "seg = c[5:3];",
+      "status": "caught",
+      "caught_by": [
+        "lint",
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "fail",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "lint": "g711_ulaw_dec: %Warning-UNUSEDSIGNAL: /Users/kos2001/gitspace/codec-agent/build/mutate/cand/g711_ulaw_dec-slice-20-10-/g711_ulaw_dec.sv:13:16: Bits of signal are not used: 'c'[6]",
+        "simulate": "11/16 tests pass",
+        "formal": "prove_ulaw_dec FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "slice-22-26+",
+      "module": "g711_ulaw_dec",
+      "operator": "slice-shift",
+      "description": "shifted c[3:0] to c[4:1]",
+      "line": 22,
+      "before": "mag = (({10'd0, 1'b1, c[3:0], 1'b1} << seg) - 16'd33) << 2;",
+      "after": "mag = (({10'd0, 1'b1, c[4:1], 1'b1} << seg) - 16'd33) << 2;",
+      "status": "caught",
+      "caught_by": [
+        "lint",
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "fail",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "lint": "g711_ulaw_dec: %Warning-UNUSEDSIGNAL: /Users/kos2001/gitspace/codec-agent/build/mutate/cand/g711_ulaw_dec-slice-22-26+/g711_ulaw_dec.sv:13:16: Bits of signal are not used: 'c'[0]",
+        "simulate": "11/16 tests pass",
+        "formal": "prove_ulaw_dec FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "stuck-26-0",
+      "module": "g711_ulaw_dec",
+      "operator": "stuck-at",
+      "description": "tied in_ready to 1'b0",
+      "line": 26,
+      "before": "assign in_ready = ~out_valid | out_ready;",
+      "after": "assign in_ready = 1'b0;",
+      "status": "caught",
+      "caught_by": [
+        "lint",
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "fail",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "lint": "g711_ulaw_dec: %Warning-UNUSEDSIGNAL: /Users/kos2001/gitspace/codec-agent/build/mutate/cand/g711_ulaw_dec-stuck-26-0/g711_ulaw_dec.sv:10:30: Signal is not used: 'out_ready'",
+        "simulate": "11/16 tests pass",
+        "formal": "prove_ulaw_dec FAIL [A2_valid_iff_pending, A3_no_false_backpress]; cover_ulaw_dec FAIL [C1_deliver, C2_push_while_pop, C3_stall]"
+      }
+    },
+    {
+      "id": "stuck-26-1",
+      "module": "g711_ulaw_dec",
+      "operator": "stuck-at",
+      "description": "tied in_ready to 1'b1",
+      "line": 26,
+      "before": "assign in_ready = ~out_valid | out_ready;",
+      "after": "assign in_ready = 1'b1;",
+      "status": "caught",
+      "caught_by": [
+        "lint",
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "fail",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "lint": "g711_ulaw_dec: %Warning-UNUSEDSIGNAL: /Users/kos2001/gitspace/codec-agent/build/mutate/cand/g711_ulaw_dec-stuck-26-1/g711_ulaw_dec.sv:10:30: Signal is not used: 'out_ready'",
+        "simulate": "13/16 tests pass",
+        "formal": "prove_ulaw_dec FAIL [A2_valid_iff_pending, A4_stable_under_stall]"
+      }
+    },
+    {
+      "id": "arithmetic-26-25",
+      "module": "g711_ulaw_enc",
+      "operator": "arithmetic",
+      "description": "turned + into -",
+      "line": 26,
+      "before": "biased = {1'b0, mag} + 14'd33;",
+      "after": "biased = {1'b0, mag} - 14'd33;",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_ulaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "boolean-55-31",
+      "module": "g711_ulaw_enc",
+      "operator": "boolean",
+      "description": "turned | into &",
+      "line": 55,
+      "before": "assign in_ready = ~out_valid | out_ready;",
+      "after": "assign in_ready = ~out_valid & out_ready;",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_ulaw_enc FAIL [A3_no_false_backpress]; cover_ulaw_enc FAIL [C2_push_while_pop]"
+      }
+    },
+    {
+      "id": "const-26-27+",
+      "module": "g711_ulaw_enc",
+      "operator": "constant",
+      "description": "changed 14'd33 to 14'd34",
+      "line": 26,
+      "before": "biased = {1'b0, mag} + 14'd33;",
+      "after": "biased = {1'b0, mag} + 14'd34;",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_ulaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "const-26-27-",
+      "module": "g711_ulaw_enc",
+      "operator": "constant",
+      "description": "changed 14'd33 to 14'd32",
+      "line": 26,
+      "before": "biased = {1'b0, mag} + 14'd33;",
+      "after": "biased = {1'b0, mag} + 14'd32;",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_ulaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "const-27-26-",
+      "module": "g711_ulaw_enc",
+      "operator": "constant",
+      "description": "changed 13'h1FFF to 13'h1FFE",
+      "line": 27,
+      "before": "v      = biased[13] ? 13'h1FFF : biased[12:0];",
+      "after": "v      = biased[13] ? 13'h1FFE : biased[12:0];",
+      "status": "equivalent",
+      "caught_by": [],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "pass",
+        "formal": "pass",
+        "equiv": "pass"
+      },
+      "details": {}
+    },
+    {
+      "id": "const-31-31-",
+      "module": "g711_ulaw_enc",
+      "operator": "constant",
+      "description": "changed 3'd7 to 3'd6",
+      "line": 31,
+      "before": "13'b1????????????: seg = 3'd7;",
+      "after": "13'b1????????????: seg = 3'd6;",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_ulaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "const-32-31+",
+      "module": "g711_ulaw_enc",
+      "operator": "constant",
+      "description": "changed 3'd6 to 3'd7",
+      "line": 32,
+      "before": "13'b01???????????: seg = 3'd6;",
+      "after": "13'b01???????????: seg = 3'd7;",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_ulaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "const-32-31-",
+      "module": "g711_ulaw_enc",
+      "operator": "constant",
+      "description": "changed 3'd6 to 3'd5",
+      "line": 32,
+      "before": "13'b01???????????: seg = 3'd6;",
+      "after": "13'b01???????????: seg = 3'd5;",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_ulaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "const-33-31+",
+      "module": "g711_ulaw_enc",
+      "operator": "constant",
+      "description": "changed 3'd5 to 3'd6",
+      "line": 33,
+      "before": "13'b001??????????: seg = 3'd5;",
+      "after": "13'b001??????????: seg = 3'd6;",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_ulaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "const-33-31-",
+      "module": "g711_ulaw_enc",
+      "operator": "constant",
+      "description": "changed 3'd5 to 3'd4",
+      "line": 33,
+      "before": "13'b001??????????: seg = 3'd5;",
+      "after": "13'b001??????????: seg = 3'd4;",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_ulaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "const-34-31+",
+      "module": "g711_ulaw_enc",
+      "operator": "constant",
+      "description": "changed 3'd4 to 3'd5",
+      "line": 34,
+      "before": "13'b0001?????????: seg = 3'd4;",
+      "after": "13'b0001?????????: seg = 3'd5;",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_ulaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "const-34-31-",
+      "module": "g711_ulaw_enc",
+      "operator": "constant",
+      "description": "changed 3'd4 to 3'd3",
+      "line": 34,
+      "before": "13'b0001?????????: seg = 3'd4;",
+      "after": "13'b0001?????????: seg = 3'd3;",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_ulaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "const-35-31+",
+      "module": "g711_ulaw_enc",
+      "operator": "constant",
+      "description": "changed 3'd3 to 3'd4",
+      "line": 35,
+      "before": "13'b00001????????: seg = 3'd3;",
+      "after": "13'b00001????????: seg = 3'd4;",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_ulaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "const-35-31-",
+      "module": "g711_ulaw_enc",
+      "operator": "constant",
+      "description": "changed 3'd3 to 3'd2",
+      "line": 35,
+      "before": "13'b00001????????: seg = 3'd3;",
+      "after": "13'b00001????????: seg = 3'd2;",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_ulaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "const-36-31+",
+      "module": "g711_ulaw_enc",
+      "operator": "constant",
+      "description": "changed 3'd2 to 3'd3",
+      "line": 36,
+      "before": "13'b000001???????: seg = 3'd2;",
+      "after": "13'b000001???????: seg = 3'd3;",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_ulaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "const-36-31-",
+      "module": "g711_ulaw_enc",
+      "operator": "constant",
+      "description": "changed 3'd2 to 3'd1",
+      "line": 36,
+      "before": "13'b000001???????: seg = 3'd2;",
+      "after": "13'b000001???????: seg = 3'd1;",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_ulaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "const-37-31+",
+      "module": "g711_ulaw_enc",
+      "operator": "constant",
+      "description": "changed 3'd1 to 3'd2",
+      "line": 37,
+      "before": "13'b0000001??????: seg = 3'd1;",
+      "after": "13'b0000001??????: seg = 3'd2;",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_ulaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "const-37-31-",
+      "module": "g711_ulaw_enc",
+      "operator": "constant",
+      "description": "changed 3'd1 to 3'd0",
+      "line": 37,
+      "before": "13'b0000001??????: seg = 3'd1;",
+      "after": "13'b0000001??????: seg = 3'd0;",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_ulaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "const-38-31+",
+      "module": "g711_ulaw_enc",
+      "operator": "constant",
+      "description": "changed 3'd0 to 3'd1",
+      "line": 38,
+      "before": "default:           seg = 3'd0;",
+      "after": "default:           seg = 3'd1;",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_ulaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "const-42-6+",
+      "module": "g711_ulaw_enc",
+      "operator": "constant",
+      "description": "changed 3'd0 to 3'd1",
+      "line": 42,
+      "before": "3'd0:    step = v[4:1];",
+      "after": "3'd1:    step = v[4:1];",
+      "status": "caught",
+      "caught_by": [
+        "lint",
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "fail",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "lint": "g711_ulaw_enc: %Warning-CASEOVERLAP: /Users/kos2001/gitspace/codec-agent/build/mutate/cand/g711_ulaw_enc-const-42-6+/g711_ulaw_enc.sv:43:7: Case conditions overlap",
+        "simulate": "11/16 tests pass",
+        "formal": "prove_ulaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "const-43-6+",
+      "module": "g711_ulaw_enc",
+      "operator": "constant",
+      "description": "changed 3'd1 to 3'd2",
+      "line": 43,
+      "before": "3'd1:    step = v[5:2];",
+      "after": "3'd2:    step = v[5:2];",
+      "status": "caught",
+      "caught_by": [
+        "lint",
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "fail",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "lint": "g711_ulaw_enc: %Warning-CASEOVERLAP: /Users/kos2001/gitspace/codec-agent/build/mutate/cand/g711_ulaw_enc-const-43-6+/g711_ulaw_enc.sv:44:7: Case conditions overlap",
+        "simulate": "11/16 tests pass",
+        "formal": "prove_ulaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "const-43-6-",
+      "module": "g711_ulaw_enc",
+      "operator": "constant",
+      "description": "changed 3'd1 to 3'd0",
+      "line": 43,
+      "before": "3'd1:    step = v[5:2];",
+      "after": "3'd0:    step = v[5:2];",
+      "status": "caught",
+      "caught_by": [
+        "lint",
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "fail",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "lint": "g711_ulaw_enc: %Warning-CASEOVERLAP: /Users/kos2001/gitspace/codec-agent/build/mutate/cand/g711_ulaw_enc-const-43-6-/g711_ulaw_enc.sv:43:7: Case conditions overlap",
+        "simulate": "11/16 tests pass",
+        "formal": "prove_ulaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "const-44-6+",
+      "module": "g711_ulaw_enc",
+      "operator": "constant",
+      "description": "changed 3'd2 to 3'd3",
+      "line": 44,
+      "before": "3'd2:    step = v[6:3];",
+      "after": "3'd3:    step = v[6:3];",
+      "status": "caught",
+      "caught_by": [
+        "lint",
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "fail",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "lint": "g711_ulaw_enc: %Warning-CASEOVERLAP: /Users/kos2001/gitspace/codec-agent/build/mutate/cand/g711_ulaw_enc-const-44-6+/g711_ulaw_enc.sv:45:7: Case conditions overlap",
+        "simulate": "11/16 tests pass",
+        "formal": "prove_ulaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "const-44-6-",
+      "module": "g711_ulaw_enc",
+      "operator": "constant",
+      "description": "changed 3'd2 to 3'd1",
+      "line": 44,
+      "before": "3'd2:    step = v[6:3];",
+      "after": "3'd1:    step = v[6:3];",
+      "status": "caught",
+      "caught_by": [
+        "lint",
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "fail",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "lint": "g711_ulaw_enc: %Warning-CASEOVERLAP: /Users/kos2001/gitspace/codec-agent/build/mutate/cand/g711_ulaw_enc-const-44-6-/g711_ulaw_enc.sv:44:7: Case conditions overlap",
+        "simulate": "11/16 tests pass",
+        "formal": "prove_ulaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "const-45-6+",
+      "module": "g711_ulaw_enc",
+      "operator": "constant",
+      "description": "changed 3'd3 to 3'd4",
+      "line": 45,
+      "before": "3'd3:    step = v[7:4];",
+      "after": "3'd4:    step = v[7:4];",
+      "status": "caught",
+      "caught_by": [
+        "lint",
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "fail",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "lint": "g711_ulaw_enc: %Warning-CASEOVERLAP: /Users/kos2001/gitspace/codec-agent/build/mutate/cand/g711_ulaw_enc-const-45-6+/g711_ulaw_enc.sv:46:7: Case conditions overlap",
+        "simulate": "11/16 tests pass",
+        "formal": "prove_ulaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "const-45-6-",
+      "module": "g711_ulaw_enc",
+      "operator": "constant",
+      "description": "changed 3'd3 to 3'd2",
+      "line": 45,
+      "before": "3'd3:    step = v[7:4];",
+      "after": "3'd2:    step = v[7:4];",
+      "status": "caught",
+      "caught_by": [
+        "lint",
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "fail",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "lint": "g711_ulaw_enc: %Warning-CASEOVERLAP: /Users/kos2001/gitspace/codec-agent/build/mutate/cand/g711_ulaw_enc-const-45-6-/g711_ulaw_enc.sv:45:7: Case conditions overlap",
+        "simulate": "11/16 tests pass",
+        "formal": "prove_ulaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "const-46-6+",
+      "module": "g711_ulaw_enc",
+      "operator": "constant",
+      "description": "changed 3'd4 to 3'd5",
+      "line": 46,
+      "before": "3'd4:    step = v[8:5];",
+      "after": "3'd5:    step = v[8:5];",
+      "status": "caught",
+      "caught_by": [
+        "lint",
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "fail",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "lint": "g711_ulaw_enc: %Warning-CASEOVERLAP: /Users/kos2001/gitspace/codec-agent/build/mutate/cand/g711_ulaw_enc-const-46-6+/g711_ulaw_enc.sv:47:7: Case conditions overlap",
+        "simulate": "11/16 tests pass",
+        "formal": "prove_ulaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "const-46-6-",
+      "module": "g711_ulaw_enc",
+      "operator": "constant",
+      "description": "changed 3'd4 to 3'd3",
+      "line": 46,
+      "before": "3'd4:    step = v[8:5];",
+      "after": "3'd3:    step = v[8:5];",
+      "status": "caught",
+      "caught_by": [
+        "lint",
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "fail",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "lint": "g711_ulaw_enc: %Warning-CASEOVERLAP: /Users/kos2001/gitspace/codec-agent/build/mutate/cand/g711_ulaw_enc-const-46-6-/g711_ulaw_enc.sv:46:7: Case conditions overlap",
+        "simulate": "11/16 tests pass",
+        "formal": "prove_ulaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "const-47-6+",
+      "module": "g711_ulaw_enc",
+      "operator": "constant",
+      "description": "changed 3'd5 to 3'd6",
+      "line": 47,
+      "before": "3'd5:    step = v[9:6];",
+      "after": "3'd6:    step = v[9:6];",
+      "status": "caught",
+      "caught_by": [
+        "lint",
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "fail",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "lint": "g711_ulaw_enc: %Warning-CASEOVERLAP: /Users/kos2001/gitspace/codec-agent/build/mutate/cand/g711_ulaw_enc-const-47-6+/g711_ulaw_enc.sv:48:7: Case conditions overlap",
+        "simulate": "11/16 tests pass",
+        "formal": "prove_ulaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "const-47-6-",
+      "module": "g711_ulaw_enc",
+      "operator": "constant",
+      "description": "changed 3'd5 to 3'd4",
+      "line": 47,
+      "before": "3'd5:    step = v[9:6];",
+      "after": "3'd4:    step = v[9:6];",
+      "status": "caught",
+      "caught_by": [
+        "lint",
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "fail",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "lint": "g711_ulaw_enc: %Warning-CASEOVERLAP: /Users/kos2001/gitspace/codec-agent/build/mutate/cand/g711_ulaw_enc-const-47-6-/g711_ulaw_enc.sv:47:7: Case conditions overlap",
+        "simulate": "11/16 tests pass",
+        "formal": "prove_ulaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "const-48-6+",
+      "module": "g711_ulaw_enc",
+      "operator": "constant",
+      "description": "changed 3'd6 to 3'd7",
+      "line": 48,
+      "before": "3'd6:    step = v[10:7];",
+      "after": "3'd7:    step = v[10:7];",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_ulaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "const-48-6-",
+      "module": "g711_ulaw_enc",
+      "operator": "constant",
+      "description": "changed 3'd6 to 3'd5",
+      "line": 48,
+      "before": "3'd6:    step = v[10:7];",
+      "after": "3'd5:    step = v[10:7];",
+      "status": "caught",
+      "caught_by": [
+        "lint",
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "fail",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "lint": "g711_ulaw_enc: %Warning-CASEOVERLAP: /Users/kos2001/gitspace/codec-agent/build/mutate/cand/g711_ulaw_enc-const-48-6-/g711_ulaw_enc.sv:48:7: Case conditions overlap",
+        "simulate": "11/16 tests pass",
+        "formal": "prove_ulaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "drop-59",
+      "module": "g711_ulaw_enc",
+      "operator": "dropped-update",
+      "description": "deleted the update of out_valid",
+      "line": 59,
+      "before": "if (!rst_n)        out_valid <= 1'b0;",
+      "after": "if (!rst_n)        begin end",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "13/16 tests pass",
+        "formal": "prove_ulaw_enc FAIL [A6_reset_empties]"
+      }
+    },
+    {
+      "id": "drop-60",
+      "module": "g711_ulaw_enc",
+      "operator": "dropped-update",
+      "description": "deleted the update of out_valid",
+      "line": 60,
+      "before": "else if (in_ready) out_valid <= in_valid;",
+      "after": "else if (in_ready) begin end",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_ulaw_enc FAIL [A2_valid_iff_pending]; cover_ulaw_enc FAIL [C1_deliver, C2_push_while_pop, C3_stall]"
+      }
+    },
+    {
+      "id": "drop-64",
+      "module": "g711_ulaw_enc",
+      "operator": "dropped-update",
+      "description": "deleted the update of out_code",
+      "line": 64,
+      "before": "if (in_ready && in_valid) out_code <= code;",
+      "after": "if (in_ready && in_valid) begin end",
+      "status": "caught",
+      "caught_by": [
+        "lint",
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "fail",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "lint": "g711_ulaw_enc: %Warning-UNDRIVEN: /Users/kos2001/gitspace/codec-agent/build/mutate/cand/g711_ulaw_enc-drop-64/g711_ulaw_enc.sv:13:30: Signal is not driven: 'out_code'",
+        "simulate": "11/16 tests pass",
+        "formal": "prove_ulaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "inversion-24-13",
+      "module": "g711_ulaw_enc",
+      "operator": "inversion",
+      "description": "dropped a bitwise inversion",
+      "line": 24,
+      "before": "sign   = ~in_pcm[15];",
+      "after": "sign   = in_pcm[15];",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_ulaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "inversion-25-35",
+      "module": "g711_ulaw_enc",
+      "operator": "inversion",
+      "description": "dropped a bitwise inversion",
+      "line": 25,
+      "before": "mag    = sign ? in_pcm[14:2] : ~in_pcm[14:2];",
+      "after": "mag    = sign ? in_pcm[14:2] : in_pcm[14:2];",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_ulaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "inversion-52-18",
+      "module": "g711_ulaw_enc",
+      "operator": "inversion",
+      "description": "dropped a bitwise inversion",
+      "line": 52,
+      "before": "code = {sign, ~seg, ~step};",
+      "after": "code = {sign, seg, ~step};",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_ulaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "inversion-52-24",
+      "module": "g711_ulaw_enc",
+      "operator": "inversion",
+      "description": "dropped a bitwise inversion",
+      "line": 52,
+      "before": "code = {sign, ~seg, ~step};",
+      "after": "code = {sign, ~seg, step};",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_ulaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "inversion-55-20",
+      "module": "g711_ulaw_enc",
+      "operator": "inversion",
+      "description": "dropped a bitwise inversion",
+      "line": 55,
+      "before": "assign in_ready = ~out_valid | out_ready;",
+      "after": "assign in_ready = out_valid | out_ready;",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "12/16 tests pass",
+        "formal": "prove_ulaw_enc FAIL [A2_valid_iff_pending, A3_no_false_backpress, A4_stable_under_stall]"
+      }
+    },
+    {
+      "id": "inversion-59-8",
+      "module": "g711_ulaw_enc",
+      "operator": "inversion",
+      "description": "dropped a logical negation",
+      "line": 59,
+      "before": "if (!rst_n)        out_valid <= 1'b0;",
+      "after": "if (rst_n)        out_valid <= 1'b0;",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_ulaw_enc FAIL [A6_reset_empties]"
+      }
+    },
+    {
+      "id": "mux-25",
+      "module": "g711_ulaw_enc",
+      "operator": "mux-swap",
+      "description": "swapped the arms of a ?:",
+      "line": 25,
+      "before": "mag    = sign ? in_pcm[14:2] : ~in_pcm[14:2];",
+      "after": "mag    = sign ? 2] : ~in_pcm[14:2] : in_pcm[14;",
+      "status": "caught",
+      "caught_by": [
+        "lint",
+        "synthesize",
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "fail",
+        "synthesize": "fail",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "skip"
+      },
+      "details": {
+        "lint": "g711_ulaw_enc: %Error: /Users/kos2001/gitspace/codec-agent/build/mutate/cand/g711_ulaw_enc-mux-25/g711_ulaw_enc.sv:25:22: syntax error, unexpected ']'",
+        "synthesize": "g711_ulaw_enc: /Users/kos2001/gitspace/codec-agent/build/mutate/cand/g711_ulaw_enc-mux-25/g711_ulaw_enc.sv:25: ERROR: syntax error, unexpected ']'",
+        "simulate": "0/16 tests pass",
+        "formal": "prove_alaw_enc ERROR (syntax error, unexpected ']'); prove_alaw_dec ERROR (syntax error, unexpected ']'); prove_ulaw_enc ERROR (syntax error, unexpected ']'); prove_ulaw_dec ERROR (syntax error, unexpected ']'); cover_alaw_enc ERROR (syntax error, unexpected ']'); cover_alaw_dec ERROR (syntax error, unexpected ']'); cover_ulaw_enc ERROR (syntax error, unexpected ']'); cover_ulaw_dec ERROR (syntax error, unexpected ']')"
+      }
+    },
+    {
+      "id": "mux-27",
+      "module": "g711_ulaw_enc",
+      "operator": "mux-swap",
+      "description": "swapped the arms of a ?:",
+      "line": 27,
+      "before": "v      = biased[13] ? 13'h1FFF : biased[12:0];",
+      "after": "v      = biased[13] ? biased[12:0] : 13'h1FFF;",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_ulaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "async-reset-58",
+      "module": "g711_ulaw_enc",
+      "operator": "reset-style",
+      "description": "made the reset asynchronous",
+      "line": 58,
+      "before": "always_ff @(posedge clk) begin",
+      "after": "always_ff @(posedge clk or negedge rst_n) begin",
+      "status": "caught",
+      "caught_by": [
+        "synthesize"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "fail",
+        "simulate": "pass",
+        "formal": "pass",
+        "equiv": "skip"
+      },
+      "details": {
+        "synthesize": "g711_ulaw_enc: REQ-IF-04 violated: asynchronous reset/set flip-flop (use always_ff @(posedge clk) with if (!rst_n))"
+      }
+    },
+    {
+      "id": "slice-25-20+",
+      "module": "g711_ulaw_enc",
+      "operator": "slice-shift",
+      "description": "shifted in_pcm[14:2] to in_pcm[15:3]",
+      "line": 25,
+      "before": "mag    = sign ? in_pcm[14:2] : ~in_pcm[14:2];",
+      "after": "mag    = sign ? in_pcm[15:3] : ~in_pcm[14:2];",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_ulaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "slice-25-20-",
+      "module": "g711_ulaw_enc",
+      "operator": "slice-shift",
+      "description": "shifted in_pcm[14:2] to in_pcm[13:1]",
+      "line": 25,
+      "before": "mag    = sign ? in_pcm[14:2] : ~in_pcm[14:2];",
+      "after": "mag    = sign ? in_pcm[13:1] : ~in_pcm[14:2];",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_ulaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "slice-25-36+",
+      "module": "g711_ulaw_enc",
+      "operator": "slice-shift",
+      "description": "shifted in_pcm[14:2] to in_pcm[15:3]",
+      "line": 25,
+      "before": "mag    = sign ? in_pcm[14:2] : ~in_pcm[14:2];",
+      "after": "mag    = sign ? in_pcm[14:2] : ~in_pcm[15:3];",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_ulaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "slice-25-36-",
+      "module": "g711_ulaw_enc",
+      "operator": "slice-shift",
+      "description": "shifted in_pcm[14:2] to in_pcm[13:1]",
+      "line": 25,
+      "before": "mag    = sign ? in_pcm[14:2] : ~in_pcm[14:2];",
+      "after": "mag    = sign ? in_pcm[14:2] : ~in_pcm[13:1];",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_ulaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "slice-27-37+",
+      "module": "g711_ulaw_enc",
+      "operator": "slice-shift",
+      "description": "shifted biased[12:0] to biased[13:1]",
+      "line": 27,
+      "before": "v      = biased[13] ? 13'h1FFF : biased[12:0];",
+      "after": "v      = biased[13] ? 13'h1FFF : biased[13:1];",
+      "status": "caught",
+      "caught_by": [
+        "lint",
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "fail",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "lint": "g711_ulaw_enc: %Warning-UNUSEDSIGNAL: /Users/kos2001/gitspace/codec-agent/build/mutate/cand/g711_ulaw_enc-slice-27-37+/g711_ulaw_enc.sv:16:16: Bits of signal are not used: 'biased'[0]",
+        "simulate": "11/16 tests pass",
+        "formal": "prove_ulaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "slice-42-22+",
+      "module": "g711_ulaw_enc",
+      "operator": "slice-shift",
+      "description": "shifted v[4:1] to v[5:2]",
+      "line": 42,
+      "before": "3'd0:    step = v[4:1];",
+      "after": "3'd0:    step = v[5:2];",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_ulaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "slice-42-22-",
+      "module": "g711_ulaw_enc",
+      "operator": "slice-shift",
+      "description": "shifted v[4:1] to v[3:0]",
+      "line": 42,
+      "before": "3'd0:    step = v[4:1];",
+      "after": "3'd0:    step = v[3:0];",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_ulaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "slice-43-22+",
+      "module": "g711_ulaw_enc",
+      "operator": "slice-shift",
+      "description": "shifted v[5:2] to v[6:3]",
+      "line": 43,
+      "before": "3'd1:    step = v[5:2];",
+      "after": "3'd1:    step = v[6:3];",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_ulaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "slice-43-22-",
+      "module": "g711_ulaw_enc",
+      "operator": "slice-shift",
+      "description": "shifted v[5:2] to v[4:1]",
+      "line": 43,
+      "before": "3'd1:    step = v[5:2];",
+      "after": "3'd1:    step = v[4:1];",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "13/16 tests pass",
+        "formal": "prove_ulaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "slice-44-22+",
+      "module": "g711_ulaw_enc",
+      "operator": "slice-shift",
+      "description": "shifted v[6:3] to v[7:4]",
+      "line": 44,
+      "before": "3'd2:    step = v[6:3];",
+      "after": "3'd2:    step = v[7:4];",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_ulaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "slice-44-22-",
+      "module": "g711_ulaw_enc",
+      "operator": "slice-shift",
+      "description": "shifted v[6:3] to v[5:2]",
+      "line": 44,
+      "before": "3'd2:    step = v[6:3];",
+      "after": "3'd2:    step = v[5:2];",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "13/16 tests pass",
+        "formal": "prove_ulaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "slice-45-22+",
+      "module": "g711_ulaw_enc",
+      "operator": "slice-shift",
+      "description": "shifted v[7:4] to v[8:5]",
+      "line": 45,
+      "before": "3'd3:    step = v[7:4];",
+      "after": "3'd3:    step = v[8:5];",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_ulaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "slice-45-22-",
+      "module": "g711_ulaw_enc",
+      "operator": "slice-shift",
+      "description": "shifted v[7:4] to v[6:3]",
+      "line": 45,
+      "before": "3'd3:    step = v[7:4];",
+      "after": "3'd3:    step = v[6:3];",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "13/16 tests pass",
+        "formal": "prove_ulaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "slice-46-22+",
+      "module": "g711_ulaw_enc",
+      "operator": "slice-shift",
+      "description": "shifted v[8:5] to v[9:6]",
+      "line": 46,
+      "before": "3'd4:    step = v[8:5];",
+      "after": "3'd4:    step = v[9:6];",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_ulaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "slice-46-22-",
+      "module": "g711_ulaw_enc",
+      "operator": "slice-shift",
+      "description": "shifted v[8:5] to v[7:4]",
+      "line": 46,
+      "before": "3'd4:    step = v[8:5];",
+      "after": "3'd4:    step = v[7:4];",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "13/16 tests pass",
+        "formal": "prove_ulaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "slice-47-22+",
+      "module": "g711_ulaw_enc",
+      "operator": "slice-shift",
+      "description": "shifted v[9:6] to v[10:7]",
+      "line": 47,
+      "before": "3'd5:    step = v[9:6];",
+      "after": "3'd5:    step = v[10:7];",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_ulaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "slice-47-22-",
+      "module": "g711_ulaw_enc",
+      "operator": "slice-shift",
+      "description": "shifted v[9:6] to v[8:5]",
+      "line": 47,
+      "before": "3'd5:    step = v[9:6];",
+      "after": "3'd5:    step = v[8:5];",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "13/16 tests pass",
+        "formal": "prove_ulaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "slice-48-22+",
+      "module": "g711_ulaw_enc",
+      "operator": "slice-shift",
+      "description": "shifted v[10:7] to v[11:8]",
+      "line": 48,
+      "before": "3'd6:    step = v[10:7];",
+      "after": "3'd6:    step = v[11:8];",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_ulaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "slice-48-22-",
+      "module": "g711_ulaw_enc",
+      "operator": "slice-shift",
+      "description": "shifted v[10:7] to v[9:6]",
+      "line": 48,
+      "before": "3'd6:    step = v[10:7];",
+      "after": "3'd6:    step = v[9:6];",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "13/16 tests pass",
+        "formal": "prove_ulaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "slice-49-22+",
+      "module": "g711_ulaw_enc",
+      "operator": "slice-shift",
+      "description": "shifted v[11:8] to v[12:9]",
+      "line": 49,
+      "before": "default: step = v[11:8];",
+      "after": "default: step = v[12:9];",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "11/16 tests pass",
+        "formal": "prove_ulaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "slice-49-22-",
+      "module": "g711_ulaw_enc",
+      "operator": "slice-shift",
+      "description": "shifted v[11:8] to v[10:7]",
+      "line": 49,
+      "before": "default: step = v[11:8];",
+      "after": "default: step = v[10:7];",
+      "status": "caught",
+      "caught_by": [
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "simulate": "13/16 tests pass",
+        "formal": "prove_ulaw_enc FAIL [A5_datapath_value]"
+      }
+    },
+    {
+      "id": "stuck-55-0",
+      "module": "g711_ulaw_enc",
+      "operator": "stuck-at",
+      "description": "tied in_ready to 1'b0",
+      "line": 55,
+      "before": "assign in_ready = ~out_valid | out_ready;",
+      "after": "assign in_ready = 1'b0;",
+      "status": "caught",
+      "caught_by": [
+        "lint",
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "fail",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "lint": "g711_ulaw_enc: %Warning-UNUSEDSIGNAL: /Users/kos2001/gitspace/codec-agent/build/mutate/cand/g711_ulaw_enc-stuck-55-0/g711_ulaw_enc.sv:12:30: Signal is not used: 'out_ready'",
+        "simulate": "11/16 tests pass",
+        "formal": "prove_ulaw_enc FAIL [A3_no_false_backpress]; cover_ulaw_enc FAIL [C1_deliver, C2_push_while_pop, C3_stall]"
+      }
+    },
+    {
+      "id": "stuck-55-1",
+      "module": "g711_ulaw_enc",
+      "operator": "stuck-at",
+      "description": "tied in_ready to 1'b1",
+      "line": 55,
+      "before": "assign in_ready = ~out_valid | out_ready;",
+      "after": "assign in_ready = 1'b1;",
+      "status": "caught",
+      "caught_by": [
+        "lint",
+        "simulate",
+        "formal"
+      ],
+      "stages": {
+        "lint": "fail",
+        "synthesize": "pass",
+        "simulate": "fail",
+        "formal": "fail",
+        "equiv": "fail"
+      },
+      "details": {
+        "lint": "g711_ulaw_enc: %Warning-UNUSEDSIGNAL: /Users/kos2001/gitspace/codec-agent/build/mutate/cand/g711_ulaw_enc-stuck-55-1/g711_ulaw_enc.sv:12:30: Signal is not used: 'out_ready'",
+        "simulate": "13/16 tests pass",
+        "formal": "prove_ulaw_enc FAIL [A1_no_overflow, A2_valid_iff_pending, A4_stable_under_stall]"
+      }
+    }
+  ]
+}

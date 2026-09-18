@@ -1,0 +1,53 @@
+{
+  "run_id": "20260918-000601-tb-g711_alaw_enc",
+  "module": "g711_alaw_enc",
+  "kind": "testbench",
+  "outcome": "ACCEPTED",
+  "iterations": 1,
+  "max_iters": 3,
+  "min_kill_pct": 90.0,
+  "model": "deepseek/deepseek-v4.1-flash",
+  "server": "http://127.0.0.1:8659",
+  "testbench": "build/generate_tb/20260918-000601-tb-g711_alaw_enc/iter1/tb_g711_alaw_enc.sv",
+  "kill_pct": 98.4,
+  "attempts": [
+    {
+      "iteration": 1,
+      "usage": {
+        "prompt_tokens": 7371,
+        "completion_tokens": 18314,
+        "total_tokens": 25685
+      },
+      "llm_elapsed_s": 76.7,
+      "testbench": "build/generate_tb/20260918-000601-tb-g711_alaw_enc/iter1/tb_g711_alaw_enc.sv",
+      "check_elapsed_s": 17.1,
+      "sound": true,
+      "soundness": {
+        "compiled": true,
+        "timeout": false,
+        "result": "PASS",
+        "checks": 131292,
+        "errors": [],
+        "other_errors": []
+      },
+      "log_tail": "RESULT PASS checks=131292\n/Users/kos2001/gitspace/codec-agent/build/generate_tb/20260918-000601-tb-g711_alaw_enc/iter1/tb_g711_alaw_enc.sv:252: $finish called at 1435755 (1s)\n",
+      "kill": {
+        "mutants": 62,
+        "considered": 61,
+        "killed": 60,
+        "kill_pct": 98.4,
+        "survivors": [
+          {
+            "id": "async-reset-54",
+            "operator": "reset-style",
+            "line": 54,
+            "after": "always_ff @(posedge clk or negedge rst_n) begin",
+            "status": "survived"
+          }
+        ]
+      },
+      "verdict": "ACCEPTED"
+    }
+  ],
+  "note": "A sound testbench agrees with RTL proven against ITU-T STL; kill rate is its detection power over the module's mutants. The gate's own testbench kills 100%."
+}

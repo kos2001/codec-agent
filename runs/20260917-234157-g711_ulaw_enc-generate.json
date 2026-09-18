@@ -1,0 +1,71 @@
+{
+  "run_id": "20260917-234157-g711_ulaw_enc",
+  "module": "g711_ulaw_enc",
+  "outcome": "PROVEN",
+  "iterations": 2,
+  "max_iters": 3,
+  "model": "deepseek/deepseek-v4.1-flash",
+  "server_model": "codec-agent",
+  "server": "http://127.0.0.1:8659",
+  "proven_candidate": "build/generate/20260917-234157-g711_ulaw_enc/iter2/g711_ulaw_enc.sv",
+  "equivalent_to_baseline": true,
+  "attempts": [
+    {
+      "iteration": 1,
+      "usage": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "llm_elapsed_s": 1.8,
+      "candidate": "build/generate/20260917-234157-g711_ulaw_enc/iter1/g711_ulaw_enc.sv",
+      "verdict": "REJECTED",
+      "stages": {
+        "lint": "pass",
+        "synthesize": "fail",
+        "simulate": "pass",
+        "formal": "pass",
+        "equiv": "skip"
+      },
+      "details": {
+        "lint": "4 modules clean",
+        "synthesize": "g711_ulaw_enc: REQ-IF-04 violated: asynchronous reset/set flip-flop (use always_ff @(posedge clk) with if (!rst_n))",
+        "simulate": "16/16 tests pass",
+        "formal": "8/8 tasks (prove: unbounded, cover: reached)",
+        "equiv": "g711_ulaw_enc: equivalence not decidable here — ERROR: No SAT model available for async FF cell $flatten\\gate.\\u.$procdff$169 ($adff).  Consider running `async2sync` or `clk2fflogic` first."
+      },
+      "equivalent_to_baseline": false,
+      "gate_elapsed_s": 4.5,
+      "evidence": "synthesize: FAILED — g711_ulaw_enc: REQ-IF-04 violated: asynchronous reset/set flip-flop (use always_ff @(posedge clk) with if (!rst_n))"
+    },
+    {
+      "iteration": 2,
+      "usage": {
+        "prompt_tokens": 8350,
+        "completion_tokens": 1189,
+        "total_tokens": 9539
+      },
+      "llm_elapsed_s": 21.4,
+      "candidate": "build/generate/20260917-234157-g711_ulaw_enc/iter2/g711_ulaw_enc.sv",
+      "verdict": "PROVEN",
+      "stages": {
+        "lint": "pass",
+        "synthesize": "pass",
+        "simulate": "pass",
+        "formal": "pass",
+        "equiv": "pass"
+      },
+      "details": {
+        "lint": "4 modules clean",
+        "synthesize": "alaw_enc=93 alaw_dec=105 ulaw_enc=142 ulaw_dec=84 cells",
+        "simulate": "16/16 tests pass",
+        "formal": "8/8 tasks (prove: unbounded, cover: reached)",
+        "equiv": "equivalent to baseline on valid outputs (alaw_enc, alaw_dec, ulaw_enc, ulaw_dec)"
+      },
+      "equivalent_to_baseline": true,
+      "gate_elapsed_s": 4.7
+    }
+  ],
+  "proves": "For every module: (simulate) output is byte-identical to the ITU-T G.191 STL reference on its official sweep vectors (all 65536 16-bit inputs), to STL on all 256 decoder codes, and to the spec-table model on segment-edge vectors, under random stalls in a 4-state simulator; full-rate throughput is 1 sample/cycle; (formal, unbounded k-induction) on EVERY reachable trace: no sample lost, duplicated or invented, no false backpressure, output stable under stall, reset empties the stage, and every delivered value equals a reference model written from the G.711 table formulas.",
+  "note": "Candidates are not applied. Review and copy into generated/g711/rtl by hand."
+}
