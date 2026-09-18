@@ -23,9 +23,9 @@ spec (G.711 PDF) ─► requirements.yaml ─► RTL
 | Gate | `PROVEN` — lint clean, 16/16 sim tests, 8/8 formal tasks (k-induction) |
 | Oracle vs STL | bit-exact on all 65536 inputs / 256 codes |
 | Oracle vs G.711 PDF | Tables 1a/1b/2a/2b rebuilt from printed columns: all 256 decoder codes, all encoder interval interiors |
-| Mutation coverage | all non-equivalent mutants caught (see `runs/*-mutate.json`) |
+| Mutation coverage | 180/180 non-equivalent mutants caught, and no stage is the only one that catches a fault |
 | Hermes-generated RTL | all 4 modules PROVEN (deepseek-v4.1-flash; 1–2 iterations with gate evidence) |
-| Hermes-generated testbenches | all 4 ACCEPTED (sound on PROVEN RTL); mutant kill 92.9–100% — survivors are async-reset (invisible to simulation, caught by the gate's netlist check) and one missed stuck `in_ready` |
+| Hermes-generated testbenches | all 4 ACCEPTED: sound on PROVEN RTL, **100% mutant kill**, no blind fault class |
 
 Reports: [`claudedocs/phase0-report.md`](claudedocs/phase0-report.md) ·
 plan: [`claudedocs/spec-to-rtl-service-plan.md`](claudedocs/spec-to-rtl-service-plan.md) ·

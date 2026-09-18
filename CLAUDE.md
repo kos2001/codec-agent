@@ -109,6 +109,8 @@ scripts/workbench.sh                   # http://127.0.0.1:8013
 - **State the gate's lint contract in the generation prompt.** The first deepseek run produced
   candidates that passed all 16 simulation tests and all 8 formal tasks on iteration 1 and were
   still rejected — by `verilator -Wall` width/unused warnings the prompt never mentioned.
+- **A fault only one stage can see is a fragile check.** Track `caught_only_by_stage` in the mutation
+  report: it was 4 (synthesize) for async reset until `tb_g711` learned the mid-cycle reset check; it is 0 now.
 - **A PROVEN verdict is only as strong as the gate that issued it.** Hermes produced μ-law
   candidates with `always_ff @(posedge clk or negedge rst_n)` that passed lint, 4-state sim and
   unbounded formal — all sample reset at clock edges. REQ-IF-04 (synchronous reset) is now a
